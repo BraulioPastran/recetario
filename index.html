@@ -422,139 +422,137 @@ const RECIPES = [
   }
 ];
 
-const DIFF_MAP = {{ easy: 'Fácil', medium: 'Media', hard: 'Difícil' }};
-const TAG_EMOJI = {{ desayuno:'🌅', postre:'🍰', cena:'🌙', merienda:'🍪', rapida:'⚡',
-  pasta:'🍝', arroz:'🍚', carne:'🥩', pescado:'🐟', pollo:'🍗',
-  ensalada:'🥗', verdura:'🥬', huevo:'🥚', sopa:'🍜', horno:'🔥' }};
+const DIFF_MAP = {"easy": "Fácil", "medium": "Media", "hard": "Difícil"};
+const TAG_EMOJI = {"desayuno": "🌅", "postre": "🍰", "cena": "🌙", "merienda": "🍪", "rapida": "⚡", "pasta": "🍝", "arroz": "🍚", "carne": "🥩", "pescado": "🐟", "pollo": "🍗", "ensalada": "🥗", "verdura": "🥬", "huevo": "🥚", "sopa": "🍜", "horno": "🔥"};
 
-function healthColor(score) {{
+function healthColor(score) {
   if (score >= 8) return '#3a8c5e';
   if (score >= 5) return '#d4a017';
   return '#c0392b';
-}}
+}
 
-function formatTime(mins) {{
+function formatTime(mins) {
   if (mins < 60) return mins + ' min';
   const h = Math.floor(mins / 60);
   const m = mins % 60;
   return m > 0 ? h + 'h ' + m + 'min' : h + 'h';
-}}
+}
 
 let activeTag = null;
 
-function getAllTags() {{
-  const counts = {{}};
-  RECIPES.forEach(r => r.tags.forEach(t => {{ counts[t] = (counts[t] || 0) + 1; }}));
+function getAllTags() {
+  const counts = {};
+  RECIPES.forEach(r => r.tags.forEach(t => { counts[t] = (counts[t] || 0) + 1; }));
   return Object.entries(counts).sort((a,b) => b[1] - a[1]);
-}}
+}
 
-function renderTags() {{
+function renderTags() {
   const wrap = document.getElementById('tagFilters');
   const tags = getAllTags();
   wrap.innerHTML = tags.map(([tag, count]) =>
-    `<button class="tag-chip" data-tag="${{tag}}" onclick="toggleTag('${{tag}}')">${{TAG_EMOJI[tag] || '🏷️'}} ${{tag}} <small>(${{count}})</small></button>`
+    `<button class="tag-chip" data-tag="${tag}" onclick="toggleTag('${tag}')">${TAG_EMOJI[tag] || '🏷️'} ${tag} <small>(${count})</small></button>`
   ).join('');
-}}
+}
 
-function toggleTag(tag) {{
-  if (activeTag === tag) {{
+function toggleTag(tag) {
+  if (activeTag === tag) {
     activeTag = null;
-  }} else {{
+  } else {
     activeTag = tag;
-  }}
+  }
   document.querySelectorAll('.tag-chip').forEach(b => b.classList.toggle('active', b.dataset.tag === activeTag));
   filterAndRender();
-}}
+}
 
-function filterAndRender() {{
+function filterAndRender() {
   const query = document.getElementById('searchInput').value.toLowerCase().trim();
-  const filtered = RECIPES.filter(r => {{
+  const filtered = RECIPES.filter(r => {
     if (activeTag && !r.tags.includes(activeTag)) return false;
     if (!query) return true;
     const haystack = (r.title + ' ' + r.tags.join(' ') + ' ' + r.ingredients.map(i=>i.name).join(' ')).toLowerCase();
     return haystack.includes(query);
-  }});
+  });
 
   const list = document.getElementById('recipeList');
   const noRes = document.getElementById('noResults');
 
-  if (filtered.length === 0) {{
+  if (filtered.length === 0) {
     list.innerHTML = '';
     noRes.classList.add('visible');
-  }} else {{
+  } else {
     noRes.classList.remove('visible');
-    list.innerHTML = filtered.map(r => {{
+    list.innerHTML = filtered.map(r => {
       const totalTime = r.prep_time_min + r.cook_time_min;
       const hc = healthColor(r.health_score);
       return `
-        <div class="card" onclick="openDetail('${{r.id}}')">
-          <img class="card-img" src="${{r.image || ''}}" alt="${{r.title}}" loading="lazy" onerror="this.style.display='none'">
+        <div class="card" onclick="openDetail('${r.id}')">
+          <img class="card-img" src="${r.image || ''}" alt="${r.title}" loading="lazy" onerror="this.style.display='none'">
           <div class="card-body">
-            <div class="card-title">${{r.title}}</div>
+            <div class="card-title">${r.title}</div>
             <div class="card-meta">
-              <span>⏱️ ${{formatTime(totalTime)}}</span>
+              <span>⏱️ ${formatTime(totalTime)}</span>
               <span class="meta-dot"></span>
-              <span>${{DIFF_MAP[r.difficulty] || r.difficulty}}</span>
+              <span>${DIFF_MAP[r.difficulty] || r.difficulty}</span>
               <span class="meta-dot"></span>
-              <span><span class="health-dot" style="background:${{hc}}"></span> Salud ${{r.health_score}}/10</span>
+              <span><span class="health-dot" style="background:${hc}"></span> Salud ${r.health_score}/10</span>
             </div>
-            <div class="card-tags">${{r.tags.map(t => `<span class="card-tag">${{TAG_EMOJI[t] || '🏷️'}} ${{t}}</span>`).join('')}}</div>
+            <div class="card-tags">${r.tags.map(t => `<span class="card-tag">${TAG_EMOJI[t] || '🏷️'} ${t}</span>`).join('')}</div>
           </div>
         </div>`;
-    }}).join('');
-  }}
-  document.getElementById('recipeCount').textContent = `${{filtered.length}} de ${{RECIPES.length}} recetas`;
-}}
+    }).join('');
+  }
+  document.getElementById('recipeCount').textContent = `${filtered.length} de ${RECIPES.length} recetas`;
+}
 
-function openDetail(id) {{
+function openDetail(id) {
   const r = RECIPES.find(r => r.id === id);
   if (!r) return;
   const totalTime = r.prep_time_min + r.cook_time_min;
   const hc = healthColor(r.health_score);
   const detail = document.getElementById('detailPane');
   detail.innerHTML = `
-    ${{r.image ? `<img class="detail-img" src="${{r.image}}" alt="${{r.title}}" onerror="this.style.display='none'">` : ''}}
+    ${r.image ? `<img class="detail-img" src="${r.image}" alt="${r.title}" onerror="this.style.display='none'">` : ''}
     <button class="detail-close" onclick="closeDetail()">✕</button>
     <div class="detail-content">
-      <h2>${{r.title}}</h2>
+      <h2>${r.title}</h2>
       <div class="detail-meta">
-        <span>⏱️ Prep: ${{r.prep_time_min}}min · Cocción: ${{r.cook_time_min}}min · Total: ${{formatTime(totalTime)}}</span>
+        <span>⏱️ Prep: ${r.prep_time_min}min · Cocción: ${r.cook_time_min}min · Total: ${formatTime(totalTime)}</span>
         <span class="meta-dot"></span>
-        <span>${{DIFF_MAP[r.difficulty] || r.difficulty}}</span>
+        <span>${DIFF_MAP[r.difficulty] || r.difficulty}</span>
         <span class="meta-dot"></span>
-        <span><span class="health-dot" style="background:${{hc}}"></span> Salud ${{r.health_score}}/10</span>
+        <span><span class="health-dot" style="background:${hc}"></span> Salud ${r.health_score}/10</span>
       </div>
-      <div class="detail-tags">${{r.tags.map(t => `<span class="card-tag">${{TAG_EMOJI[t] || '🏷️'}} ${{t}}</span>`).join('')}}</div>
+      <div class="detail-tags">${r.tags.map(t => `<span class="card-tag">${TAG_EMOJI[t] || '🏷️'} ${t}</span>`).join('')}</div>
 
       <h3>🧂 Ingredientes</h3>
       <ul class="ingredient-list">
-        ${{r.ingredients.map(i => `<li><strong>${{i.name}}</strong>${{i.quantity ? ' — ' + i.quantity + (i.unit ? ' ' + i.unit : '') : ''}}</li>`).join('')}}
+        ${r.ingredients.map(i => `<li><strong>${i.name}</strong>${i.quantity ? ' — ' + i.quantity + (i.unit ? ' ' + i.unit : '') : ''}</li>`).join('')}
       </ul>
 
       <h3>📝 Preparación</h3>
-      <ol class="step-list">${{r.steps.map(s => `<li>${{s}}</li>`).join('')}}</ol>
+      <ol class="step-list">${r.steps.map(s => `<li>${s}</li>`).join('')}</ol>
 
-      <a class="source-link" href="${{r.source}}" target="_blank" rel="noopener">🔗 Ver receta original</a>
+      <a class="source-link" href="${r.source}" target="_blank" rel="noopener">🔗 Ver receta original</a>
     </div>
   `;
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-}}
+}
 
-function closeDetail() {{
+function closeDetail() {
   document.getElementById('overlay').classList.remove('open');
   document.body.style.overflow = '';
-}}
+}
 
-document.getElementById('overlay').addEventListener('click', function(e) {{
+document.getElementById('overlay').addEventListener('click', function(e) {
   if (e.target === this) closeDetail();
-}});
+});
 
 document.getElementById('searchInput').addEventListener('input', filterAndRender);
 
-document.addEventListener('keydown', function(e) {{
+document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeDetail();
-}});
+});
 
 // Init
 renderTags();

@@ -5,14 +5,25 @@ import json
 import sys
 from pathlib import Path
 
-HTML_TEMPLATE = """<!DOCTYPE html>
+
+def build_html(recipes_json_str):
+    recipes = json.loads(recipes_json_str)
+
+    DIFF_MAP = { 'easy': 'Fácil', 'medium': 'Media', 'hard': 'Difícil' }
+    TAG_EMOJI = {
+        'desayuno':'🌅', 'postre':'🍰', 'cena':'🌙', 'merienda':'🍪', 'rapida':'⚡',
+        'pasta':'🍝', 'arroz':'🍚', 'carne':'🥩', 'pescado':'🐟', 'pollo':'🍗',
+        'ensalada':'🥗', 'verdura':'🥬', 'huevo':'🥚', 'sopa':'🍜', 'horno':'🔥'
+    }
+
+    return f"""<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>🥘 Recetario</title>
 <style>
-  :root {
+  :root {{
     --bg: #faf8f5;
     --card: #fff;
     --text: #2d2a26;
@@ -25,138 +36,138 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     --tag-text: #6b5f55;
     --tag-active-bg: #2d2a26;
     --tag-active-text: #fff;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
+  }}
+  *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.5;
     min-height: 100dvh;
     -webkit-font-smoothing: antialiased;
-  }
-  .container { max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }
+  }}
+  .container {{ max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }}
 
   /* Header */
-  header { text-align: center; padding: 16px 0 8px; }
-  header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; }
-  header .count { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+  header {{ text-align: center; padding: 16px 0 8px; }}
+  header h1 {{ font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; }}
+  header .count {{ color: var(--muted); font-size: .9rem; margin-top: 2px; }}
 
   /* Search */
-  .search-wrap { position: relative; margin: 16px 0 12px; }
-  .search-wrap input {
+  .search-wrap {{ position: relative; margin: 16px 0 12px; }}
+  .search-wrap input {{
     width: 100%; padding: 14px 16px 14px 44px;
     border: 1.5px solid var(--border); border-radius: 14px;
     font-size: 1rem; background: var(--card); color: var(--text);
     outline: none; transition: border-color .2s, box-shadow .2s;
     -webkit-appearance: none;
-  }
-  .search-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,93,58,.12); }
-  .search-wrap input::placeholder { color: #b8afa6; }
-  .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--muted); pointer-events: none; }
+  }}
+  .search-wrap input:focus {{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(232,93,58,.12); }}
+  .search-wrap input::placeholder {{ color: #b8afa6; }}
+  .search-icon {{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--muted); pointer-events: none; }}
 
   /* Tags */
-  .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-  .tag-chip {
+  .tags-wrap {{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }}
+  .tag-chip {{
     padding: 7px 14px; border-radius: 20px; font-size: .85rem; font-weight: 500;
     background: var(--tag-bg); color: var(--tag-text);
     border: none; cursor: pointer; transition: all .15s;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
-  }
-  .tag-chip.active { background: var(--tag-active-bg); color: var(--tag-active-text); }
-  .tag-chip:hover:not(.active) { background: #e8e2da; }
+  }}
+  .tag-chip.active {{ background: var(--tag-active-bg); color: var(--tag-active-text); }}
+  .tag-chip:hover:not(.active) {{ background: #e8e2da; }}
 
   /* Cards */
-  .recipes { display: flex; flex-direction: column; gap: 16px; }
-  .card {
+  .recipes {{ display: flex; flex-direction: column; gap: 16px; }}
+  .card {{
     background: var(--card); border-radius: 16px; overflow: hidden;
     box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s;
     cursor: pointer; -webkit-tap-highlight-color: transparent;
-  }
-  .card:active { transform: scale(.99); }
-  .card-img {
+  }}
+  .card:active {{ transform: scale(.99); }}
+  .card-img {{
     width: 100%; height: 200px; object-fit: cover;
     display: block; background: #f0ece6;
-  }
-  .card-body { padding: 14px 16px 16px; }
-  .card-title { font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -.01em; }
-  .card-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .82rem; color: var(--muted); margin-bottom: 10px; }
-  .card-meta span { display: inline-flex; align-items: center; gap: 4px; }
-  .meta-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); margin: 0 2px; }
-  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .card-tag {
+  }}
+  .card-body {{ padding: 14px 16px 16px; }}
+  .card-title {{ font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -.01em; }}
+  .card-meta {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .82rem; color: var(--muted); margin-bottom: 10px; }}
+  .card-meta span {{ display: inline-flex; align-items: center; gap: 4px; }}
+  .meta-dot {{ width: 4px; height: 4px; border-radius: 50%; background: var(--border); margin: 0 2px; }}
+  .card-tags {{ display: flex; flex-wrap: wrap; gap: 6px; }}
+  .card-tag {{
     padding: 4px 10px; border-radius: 12px; font-size: .75rem;
     background: var(--tag-bg); color: var(--tag-text); font-weight: 500;
-  }
-  .health-dot {
+  }}
+  .health-dot {{
     display: inline-block; width: 10px; height: 10px; border-radius: 50%;
     margin-right: 2px; vertical-align: middle;
-  }
+  }}
 
   /* Detail overlay */
-  .overlay { display: none; }
-  .overlay.open {
+  .overlay {{ display: none; }}
+  .overlay.open {{
     display: flex; position: fixed; inset: 0; z-index: 100;
     background: rgba(0,0,0,.55); align-items: flex-end; justify-content: center;
     animation: fadeIn .2s;
-  }
-  .detail {
+  }}
+  .detail {{
     background: var(--card); border-radius: 20px 20px 0 0;
     width: 100%; max-width: 680px; max-height: 85dvh;
     overflow-y: auto; padding: 0;
     animation: slideUp .3s ease;
     display: flex; flex-direction: column;
-  }
-  @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-  @keyframes slideUp { from { transform: translateY(20%) } to { transform: translateY(0) } }
-  .detail-img {
+  }}
+  @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
+  @keyframes slideUp {{ from {{ transform: translateY(20%) }} to {{ transform: translateY(0) }} }}
+  .detail-img {{
     width: 100%; height: 220px; object-fit: cover; display: block; background: #f0ece6;
     border-radius: 20px 20px 0 0;
-  }
-  .detail-content { padding: 20px; }
-  .detail-close {
+  }}
+  .detail-content {{ padding: 20px; }}
+  .detail-close {{
     position: absolute; top: 14px; right: 14px;
     width: 36px; height: 36px; border-radius: 50%; border: none;
     background: rgba(0,0,0,.45); color: #fff; font-size: 1.2rem;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     z-index: 10;
-  }
-  .detail h2 { font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
-  .detail-meta { font-size: .85rem; color: var(--muted); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-  .detail h3 { font-size: 1rem; font-weight: 600; margin: 18px 0 10px; }
-  .ingredient-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
-  .ingredient-list li { padding: 8px 12px; background: #f9f7f3; border-radius: 10px; font-size: .9rem; }
-  .step-list { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 10px; }
-  .step-list li { counter-increment: step; display: flex; gap: 12px; font-size: .9rem; line-height: 1.5; }
-  .step-list li::before {
+  }}
+  .detail h2 {{ font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }}
+  .detail-meta {{ font-size: .85rem; color: var(--muted); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }}
+  .detail h3 {{ font-size: 1rem; font-weight: 600; margin: 18px 0 10px; }}
+  .ingredient-list {{ list-style: none; display: flex; flex-direction: column; gap: 6px; }}
+  .ingredient-list li {{ padding: 8px 12px; background: #f9f7f3; border-radius: 10px; font-size: .9rem; }}
+  .step-list {{ list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 10px; }}
+  .step-list li {{ counter-increment: step; display: flex; gap: 12px; font-size: .9rem; line-height: 1.5; }}
+  .step-list li::before {{
     content: counter(step);
     flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
     background: var(--accent); color: #fff;
     display: flex; align-items: center; justify-content: center;
     font-size: .8rem; font-weight: 600;
-  }
-  .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-  .source-link {
+  }}
+  .detail-tags {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }}
+  .source-link {{
     display: inline-block; margin-top: 12px; font-size: .82rem; color: var(--accent);
     text-decoration: none; font-weight: 500;
-  }
+  }}
 
   /* No results */
-  .no-results { text-align: center; padding: 40px 20px; color: var(--muted); display: none; }
-  .no-results.visible { display: block; }
-  .no-results .emoji { font-size: 3rem; margin-bottom: 12px; }
+  .no-results {{ text-align: center; padding: 40px 20px; color: var(--muted); display: none; }}
+  .no-results.visible {{ display: block; }}
+  .no-results .emoji {{ font-size: 3rem; margin-bottom: 12px; }}
 
   /* Scrollbar */
-  .detail::-webkit-scrollbar { width: 4px; }
-  .detail::-webkit-scrollbar-thumb { background: #d4ccc3; border-radius: 4px; }
+  .detail::-webkit-scrollbar {{ width: 4px; }}
+  .detail::-webkit-scrollbar-thumb {{ background: #d4ccc3; border-radius: 4px; }}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
     <h1>🥘 Recetario</h1>
-    <p class="count" id="recipeCount">{total} recetas</p>
+    <p class="count" id="recipeCount">{len(recipes)} recetas</p>
   </header>
 
   <div class="search-wrap">
@@ -179,12 +190,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </div>
 
 <script>
-const RECIPES = {recipes_json};
+const RECIPES = {json.dumps(recipes, ensure_ascii=False, indent=2)};
 
-const DIFF_MAP = {{ easy: 'Fácil', medium: 'Media', hard: 'Difícil' }};
-const TAG_EMOJI = {{ desayuno:'🌅', postre:'🍰', cena:'🌙', merienda:'🍪', rapida:'⚡',
-  pasta:'🍝', arroz:'🍚', carne:'🥩', pescado:'🐟', pollo:'🍗',
-  ensalada:'🥗', verdura:'🥬', huevo:'🥚', sopa:'🍜', horno:'🔥' }};
+const DIFF_MAP = {json.dumps(DIFF_MAP, ensure_ascii=False)};
+const TAG_EMOJI = {json.dumps(TAG_EMOJI, ensure_ascii=False)};
 
 function healthColor(score) {{
   if (score >= 8) return '#3a8c5e';
@@ -322,21 +331,21 @@ filterAndRender();
 </body>
 </html>"""
 
+
 def main():
     recipes_path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("recipes.json")
     output_path = Path(sys.argv[2]) if len(sys.argv) > 2 else Path("index.html")
 
     with open(recipes_path) as f:
-        recipes = json.load(f)
+        recipes_json_str = f.read()
 
-    recipes_json = json.dumps(recipes, ensure_ascii=False, indent=2)
-    html = HTML_TEMPLATE.replace("{recipes_json}", recipes_json)
-    html = html.replace("{total}", str(len(recipes)))
+    html = build_html(recipes_json_str)
 
     with open(output_path, "w") as f:
         f.write(html)
 
-    print(f"✅ Generated {output_path} with {len(recipes)} recipes")
+    print(f"✅ Generated {output_path} with {len(json.loads(recipes_json_str))} recipes")
+
 
 if __name__ == "__main__":
     main()
