@@ -1,0 +1,249 @@
+[
+  {
+    "id": "e88dd2cd-5576-4af1-954e-4576f316fcfe",
+    "title": "Salmón tataki con crema de aguacate",
+    "tags": [
+      "pescado",
+      "rapida",
+      "cena"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 5,
+    "difficulty": "medium",
+    "health_score": 8,
+    "ingredients": [
+      {
+        "name": "filete de salmón",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "salsa de soja",
+        "quantity": "60",
+        "unit": "ml"
+      },
+      {
+        "name": "limón",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "sésamo",
+        "quantity": "30",
+        "unit": "g"
+      },
+      {
+        "name": "aguacate",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "queso crema",
+        "quantity": "2-3",
+        "unit": "cucharadas"
+      },
+      {
+        "name": "aceite vegetal",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Marinar el salmón en salsa de soja con el zumo de medio limón durante 30 minutos a 1 hora.",
+      "Rebozar el salmón en sésamo por todos los lados.",
+      "Freír el salmón en aceite vegetal 1 minuto por cada lado.",
+      "Preparar el mousse de aguacate: mezclar medio aguacate, un poco de zumo de limón, queso crema y una pizca de sal. Triturar hasta obtener una crema homogénea.",
+      "Colocar el mousse de aguacate en el plato con ayuda de una manga pastelera o cuchara.",
+      "Cortar el salmón en láminas y colocarlo sobre el mousse."
+    ],
+    "source": "https://vm.tiktok.com/ZNR7PtUHx/",
+    "image": "images/salmon_tataki_con_crema_de_aguacate.jpg",
+    "created_at": "2026-06-04T20:10:00Z"
+  },
+  {
+    "id": "5e3666d2-b521-4f28-ada4-3be5eff57807",
+    "title": "Pastel de sushi invertido",
+    "tags": [
+      "pescado",
+      "cena",
+      "arroz"
+    ],
+    "prep_time_min": 25,
+    "cook_time_min": 20,
+    "difficulty": "medium",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "arroz para sushi",
+        "quantity": "300",
+        "unit": "g"
+      },
+      {
+        "name": "vinagre de arroz",
+        "quantity": "3",
+        "unit": "cucharadas"
+      },
+      {
+        "name": "azúcar",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "sal",
+        "quantity": "1",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "salmón para sushi",
+        "quantity": "300-350",
+        "unit": "g"
+      },
+      {
+        "name": "queso crema",
+        "quantity": "225",
+        "unit": "g"
+      },
+      {
+        "name": "aguacate",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "pepino",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "aceite de aguacate",
+        "quantity": "1-2",
+        "unit": "cucharaditas"
+      },
+      {
+        "name": "furikake o sésamo",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "mayonesa picante",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "cebolleta",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "nori",
+        "quantity": "",
+        "unit": "láminas"
+      }
+    ],
+    "steps": [
+      "Lavar el arroz 3-4 veces hasta que el agua salga clara. Cocer según instrucciones del paquete.",
+      "Mezclar el vinagre de arroz con el azúcar y la sal. Incorporar al arroz caliente con una espátula suave. Dejar enfriar ligeramente.",
+      "Engrasar un bol o molde hondo con aceite de aguacate.",
+      "Colocar una capa uniforme de salmón fresco troceado en el fondo del bol.",
+      "Extender el queso crema encima en una capa uniforme.",
+      "Añadir capas de aguacate en láminas y pepino en rodajas finas (opcional).",
+      "Cubrir con el arroz de sushi y presionar firmemente con una cuchara o las manos húmedas.",
+      "Espolvorear furikake o sésamo por encima del arroz.",
+      "Dejar reposar 2-3 minutos, luego voltear con cuidado sobre un plato. Levantar el bol lentamente para que el pastel salga limpio.",
+      "Rociar generosamente con mayonesa picante y decorar con cebolleta picada.",
+      "Servir con láminas de nori para hacer hand rolls."
+    ],
+    "source": "https://vm.tiktok.com/ZNRGuPsnC/",
+    "image": "images/pastel_de_sushi_invertido.jpg",
+    "created_at": "2026-06-04T20:20:00Z"
+  },
+  {
+    "id": "09e1999b-c118-4edb-b16c-58659e7af83a",
+    "title": "Tortita de gambas con papel de arroz",
+    "tags": [
+      "pescado",
+      "rapida",
+      "cena"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 10,
+    "difficulty": "easy",
+    "health_score": 9,
+    "ingredients": [
+      {
+        "name": "gamba",
+        "quantity": "250",
+        "unit": "g"
+      },
+      {
+        "name": "aceite de sésamo",
+        "quantity": "0.5",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "maicena",
+        "quantity": "0.5",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "cebolleta",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "pimienta blanca",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "papel de arroz",
+        "quantity": "2",
+        "unit": "láminas"
+      },
+      {
+        "name": "aceite en spray",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "salsa de soja",
+        "quantity": "3",
+        "unit": "cucharadas"
+      },
+      {
+        "name": "aceite de sésamo",
+        "quantity": "0.5",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "gochugaru o copos de chili",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "sésamo",
+        "quantity": "",
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Cortar las gambas en trozos pequeños.",
+      "Mezclar las gambas con aceite de sésamo, maicena, cebolleta picada, sal y pimienta blanca al gusto.",
+      "Colocar una lámina de papel de arroz, extender la mezcla de gambas uniformemente encima y cubrir con otra lámina de papel de arroz.",
+      "Calentar una sartén a fuego medio-alto, pulverizar con aceite y cocinar la tortita 3-5 minutos por cada lado hasta que esté crujiente.",
+      "Servir con cebolleta y salsa de soja mezclada con aceite de sésamo, gochugaru y sésamo por encima."
+    ],
+    "source": "https://vm.tiktok.com/ZNRv1sgMX/",
+    "image": "images/tortita_de_gambas_con_papel_de_arroz.jpg",
+    "created_at": "2026-06-04T21:27:00Z"
+  }
+]
