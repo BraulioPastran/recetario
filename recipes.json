@@ -2066,5 +2066,69 @@
     "source": "https://vm.tiktok.com/ZNRA5LgYB/",
     "image": "images/udon-verduras-ternera.jpg",
     "created_at": "2026-06-07T19:50:00Z"
+  },
+  {
+    "id": "97886747-d52d-4edf-b0f4-d7b068bdaa05",
+    "title": "Espaguetis a la carbonara (receta original italiana)",
+    "tags": [
+      "pasta",
+      "cena",
+      "rapida"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 15,
+    "difficulty": "medium",
+    "health_score": 6,
+    "ingredients": [
+      {
+        "name": "espaguetis",
+        "quantity": "100",
+        "unit": "g por persona"
+      },
+      {
+        "name": "guanciale o bacon o tocino",
+        "quantity": "50",
+        "unit": "g por persona"
+      },
+      {
+        "name": "yemas de huevo",
+        "quantity": "2",
+        "unit": "por persona"
+      },
+      {
+        "name": "queso pecorino romano (o parmesano)",
+        "quantity": "30",
+        "unit": "g"
+      },
+      {
+        "name": "pimienta negra molida",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "sal gruesa",
+        "quantity": "",
+        "unit": "para la cocción"
+      },
+      {
+        "name": "mantequilla de cerdo (grasa de cerdo)",
+        "quantity": "",
+        "unit": "opcional"
+      }
+    ],
+    "steps": [
+      "Poner abundante agua a hervir con sal gruesa. Cuando hierva, añadir los espaguetis y cocer según tiempo del paquete.",
+      "Mientras, quitar la piel al guanciale (o bacon) y cortar en tiras finas.",
+      "Calentar una sartén con un poco de mantequilla de cerdo y sofreír el guanciale junto con un trozo de la piel para dar aroma. Retirar la piel antes de servir. Cocinar hasta que esté dorado y crujiente.",
+      "En un bol, batir las yemas de huevo (2 por persona). Añadir el queso pecorino rallado (30g por cada 2 yemas) y pimienta negra molida. Mezclar bien.",
+      "Añadir una cucharada de agua de cocción caliente de la pasta a la mezcla de huevo y queso. Remover hasta obtener una crema suave. El agua caliente ayuda a esterilizar el huevo y derretir el queso.",
+      "Cuando la pasta esté al dente, escurrirla (reservando agua de cocción) y añadirla directamente a la sartén con el guanciale. Saltear todo junto a fuego medio.",
+      "Apagar el fuego completamente. Verter la mezcla de huevo y queso sobre la pasta caliente y remover enérgicamente.",
+      "Añadir agua de cocción reservada, una o dos cucharadas, hasta obtener una crema suave y homogénea. No dejar que el huevo se cocine demasiado o quedará grumoso.",
+      "Servir inmediatamente con pimienta negra molida y queso pecorino rallado por encima."
+    ],
+    "source": "https://youtu.be/A9UoFWKIB2Y",
+    "image": "images/espaguetis_a_la_carbonara.jpg",
+    "created_at": "2026-06-08T13:10:00Z"
   }
 ]
