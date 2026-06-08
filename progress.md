@@ -2,7 +2,7 @@
 
 ## Pendiente ⏳ | Hecho ✅ | Fallo ❌
 
-- [ ] 1. Masa de pizza — Maria LC — https://youtu.be/wfJJvrLqjRw
+- [✅] 1. Masa de pizza — Maria LC — https://youtu.be/wfJJvrLqjRw
 - [❌] 2. Pollo con calabacín y verduras — Maria LC — https://vm.tiktok.com/ZMNE9u2pJ/
 - [❌] 3. Arroz frito — Maria LC — https://vm.tiktok.com/ZMF1K8PLh/
 - [✅] 4. Tortitas caseras — Miguel — https://www.directoalpaladar.com/recetas-tradicionales/tortitas-americanas-asi-autentica-receta
