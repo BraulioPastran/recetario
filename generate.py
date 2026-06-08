@@ -3,6 +3,7 @@
 
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -15,6 +16,30 @@ def build_html(recipes_json_str):
         'pasta':'🍝', 'arroz':'🍚', 'carne':'🥩', 'pescado':'🐟', 'pollo':'🍗',
         'ensalada':'🥗', 'verdura':'🥬', 'huevo':'🥚', 'sopa':'🍜', 'horno':'🔥'
     }
+
+    # Calculate latest recipe date
+    dates = []
+    for r in recipes:
+        if r.get('created_at'):
+            try:
+                dt = datetime.fromisoformat(r['created_at'].replace('Z', '+00:00'))
+                dates.append(dt)
+            except:
+                pass
+    if dates:
+        latest = max(dates)
+        now = datetime.now(timezone.utc)
+        delta = now - latest
+        days = delta.days
+        hours = delta.seconds // 3600
+        if days == 0:
+            last_str = f"Última añadida hace {'unos minutos' if hours == 0 else str(hours)+'h'}"
+        elif days == 1:
+            last_str = "Última añadida hace 1 día"
+        else:
+            last_str = f"Última añadida hace {days} días"
+    else:
+        last_str = ""
 
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -54,7 +79,8 @@ def build_html(recipes_json_str):
   /* Header */
   header {{ text-align: center; padding: 16px 0 8px; }}
   header h1 {{ font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; }}
-  header .count {{ color: var(--muted); font-size: .9rem; margin-top: 2px; }}
+  header .count {{ color: var(--text); font-size: 1rem; font-weight: 600; margin-top: 2px; }}
+  header .sub {{ color: var(--muted); font-size: .8rem; margin-top: 0; }}
 
   /* Search */
   .search-wrap {{ position: relative; margin: 16px 0 12px; }}
@@ -81,6 +107,14 @@ def build_html(recipes_json_str):
   }}
   .tag-chip.active {{ background: var(--tag-active-bg); color: var(--tag-active-text); }}
   .tag-chip:hover:not(.active) {{ background: #e8e2da; }}
+  .tag-more {{
+    padding: 7px 14px; border-radius: 20px; font-size: .8rem; font-weight: 500;
+    background: transparent; color: var(--accent);
+    border: 1.5px dashed var(--accent); cursor: pointer; transition: all .15s;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none; touch-action: manipulation;
+  }}
+  .tag-more:hover {{ background: rgba(232,93,58,.08); }}
 
   /* Cards */
   .recipes {{ display: flex; flex-direction: column; gap: 16px; }}
@@ -179,7 +213,8 @@ def build_html(recipes_json_str):
 <div class="container">
   <header>
     <h1>🥘 Recetario</h1>
-    <p class="count" id="recipeCount">{len(recipes)} recetas</p>
+    <p class="count" id="recipeCount">{len(recipes)} recetas guardadas</p>
+    <p class="sub" id="lastAdded">{last_str}</p>
   </header>
 
   <div class="search-wrap">
@@ -220,6 +255,8 @@ function formatTime(mins) {{
   return m > 0 ? h + 'h ' + m + 'min' : h + 'h';
 }}
 
+const MAIN_TAGS = ['carne', 'pescado', 'pasta', 'huevo', 'verdura'];
+let showAllTags = false;
 let activeTag = null;
 
 function getAllTags() {{
@@ -230,10 +267,27 @@ function getAllTags() {{
 
 function renderTags() {{
   const wrap = document.getElementById('tagFilters');
-  const tags = getAllTags();
-  wrap.innerHTML = tags.map(([tag, count]) =>
+  const allTags = getAllTags();
+  const mainTags = allTags.filter(([t]) => MAIN_TAGS.includes(t));
+  const extraTags = allTags.filter(([t]) => !MAIN_TAGS.includes(t));
+  const visible = showAllTags ? allTags : mainTags;
+  let html = visible.map(([tag, count]) =>
     `<button class="tag-chip" data-tag="${{tag}}" onclick="toggleTag('${{tag}}')">${{TAG_EMOJI[tag] || '🏷️'}} ${{tag}} <small>(${{count}})</small></button>`
   ).join('');
+  if (!showAllTags && extraTags.length > 0) {{
+    html += `<button class="tag-more" onclick="toggleMoreTags()">+ ver más</button>`;
+  }} else if (showAllTags) {{
+    html += `<button class="tag-more" onclick="toggleMoreTags()">− ver menos</button>`;
+  }}
+  wrap.innerHTML = html;
+}}
+
+function toggleMoreTags() {{
+  showAllTags = !showAllTags;
+  renderTags();
+  activeTag = null;
+  document.querySelectorAll('.tag-chip').forEach(b => b.classList.remove('active'));
+  filterAndRender();
 }}
 
 function toggleTag(tag) {{
@@ -284,7 +338,7 @@ function filterAndRender() {{
         </div>`;
     }}).join('');
   }}
-  document.getElementById('recipeCount').textContent = `${{filtered.length}} de ${{RECIPES.length}} recetas`;
+  document.getElementById('recipeCount').textContent = `${{filtered.length}} de ${{RECIPES.length}} recetas guardadas`;
 }}
 
 function openDetail(id) {{
