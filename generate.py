@@ -247,11 +247,12 @@ function toggleTag(tag) {{
 }}
 
 function filterAndRender() {{
-  const query = document.getElementById('searchInput').value.toLowerCase().trim();
+  const q = document.getElementById('searchInput').value.trim();
+  const query = q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   const filtered = RECIPES.filter(r => {{
     if (activeTag && !r.tags.includes(activeTag)) return false;
     if (!query) return true;
-    const haystack = (r.title + ' ' + r.tags.join(' ') + ' ' + r.ingredients.map(i=>i.name).join(' ')).toLowerCase();
+    const haystack = (r.title + ' ' + r.tags.join(' ') + ' ' + r.ingredients.map(i=>i.name).join(' ')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     return haystack.includes(query);
   }});
 
