@@ -31,6 +31,6 @@
 - [✅] 27. Puerros rellenos — Miguel — https://vm.tiktok.com/ZGeatkQ5p/
 - [✅] 28. Bizcocho japones — Miguel — https://vm.tiktok.com/ZGemWbhUL/
 - [✅] 29. Gelatinas de café — Miguel/Maria LC — https://vm.tiktok.com/ZGe9DMxKU/
-- [ ] 30. Cheesecake light — Miguel — https://vm.tiktok.com/ZGexVcrT2/
-- [ ] 31. Tortitas de calabacín saladas — Miguel — https://vm.tiktok.com/ZGeCmcnFp/
+- [✅] 30. Cheesecake light — Miguel — https://vm.tiktok.com/ZGexVcrT2/
+- [✅] 31. Tortitas de calabacín saladas — Miguel — https://vm.tiktok.com/ZGeCmcnFp/
 - [✅] 32. Pizza casera — Miguel — https://www.chefstefanobarbato.com/esp/ricette/pizza-fatta-in-casa-rotonda-classica-e-rettangolare-al-taglio/

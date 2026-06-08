@@ -3460,5 +3460,137 @@
     "source": "https://vm.tiktok.com/ZGeU8staU/",
     "image": "images/coliflor_steak_chimichurri.jpg",
     "created_at": "2026-06-08T15:43:00Z"
+  },
+  {
+    "id": "d2ab8550-3796-4ae4-b937-d1bbb7443bad",
+    "title": "Cheesecake light",
+    "tags": [
+      "postre",
+      "rapida"
+    ],
+    "prep_time_min": 5,
+    "cook_time_min": 15,
+    "difficulty": "easy",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "queso crema light",
+        "quantity": "250",
+        "unit": "g"
+      },
+      {
+        "name": "huevos",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "yogur griego natural",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "endulzante",
+        "quantity": "",
+        "unit": "al gusto"
+      }
+    ],
+    "steps": [
+      "En un bol, mezclar los 2 huevos, 250 g de queso crema light, el yogur griego natural y el endulzante al gusto.",
+      "Batir hasta obtener una masa homogénea.",
+      "Forrar un molde pequeño con papel de horno y verter la mezcla.",
+      "Hornear en airfryer a 180°C durante 15 minutos (la mezcla quedará bailonga, se asentará al enfriar).",
+      "Dejar reposar en el frigorífico durante al menos 4 horas.",
+      "Servir fría."
+    ],
+    "source": "https://vm.tiktok.com/ZGexVcrT2/",
+    "image": "images/cheesecake_light.jpg",
+    "created_at": "2026-06-08T15:43:00Z"
+  },
+  {
+    "id": "231716b8-ca9f-426e-9a1a-ed50b9515292",
+    "title": "Tortitas de calabacín saladas",
+    "tags": [
+      "verdura",
+      "cena",
+      "rapida",
+      "merienda"
+    ],
+    "prep_time_min": 15,
+    "cook_time_min": 10,
+    "difficulty": "easy",
+    "health_score": 8,
+    "ingredients": [
+      {
+        "name": "calabacín",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "cebolla morada",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "queso crema",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "huevos",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "maicena",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "levadura química",
+        "quantity": "1",
+        "unit": "sobre"
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimienta",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": "",
+        "unit": "para la plancha"
+      },
+      {
+        "name": "yogur griego",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "limón",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "cebollino",
+        "quantity": "",
+        "unit": "al gusto"
+      }
+    ],
+    "steps": [
+      "Rallar los calabacines y escurrirlos muy bien hasta que suelten toda el agua.",
+      "En un bol, mezclar el calabacín escurrido con la cebolla morada picada, el queso crema, los huevos, la maicena, la levadura química, sal y pimienta.",
+      "Calentar una plancha o sartén con un chorrito de aceite de oliva.",
+      "Verter porciones de la mezcla y cocinar hasta que estén doradas por ambos lados.",
+      "Para la salsa: mezclar el yogur griego con el zumo de medio limón, sal, pimienta y cebollino picado.",
+      "Servir las tortitas apiladas con la salsa de yogur por encima."
+    ],
+    "source": "https://vm.tiktok.com/ZGeCmcnFp/",
+    "image": "images/tortitas_de_calabacin_saladas.jpg",
+    "created_at": "2026-06-08T15:43:00Z"
   }
 ]
