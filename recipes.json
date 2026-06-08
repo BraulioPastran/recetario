@@ -2418,5 +2418,495 @@
     "source": "https://www.chefstefanobarbato.com/esp/ricette/pizza-fatta-in-casa-rotonda-classica-e-rettangolare-al-taglio/",
     "image": "",
     "created_at": "2026-06-08T15:42:00Z"
+  },
+  {
+    "id": "9771a20a-2110-4405-85c6-ea72d627a8a7",
+    "title": "Tarta de queso de la viña",
+    "tags": [
+      "postre",
+      "horno"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 40,
+    "difficulty": "easy",
+    "health_score": 5,
+    "ingredients": [
+      {
+        "name": "queso crema (tipo Philadelphia)",
+        "quantity": "900",
+        "unit": "g"
+      },
+      {
+        "name": "nata para montar (35% grasa)",
+        "quantity": "500",
+        "unit": "ml"
+      },
+      {
+        "name": "azúcar",
+        "quantity": "240",
+        "unit": "g"
+      },
+      {
+        "name": "huevos L",
+        "quantity": "5",
+        "unit": "unidades"
+      },
+      {
+        "name": "maicena",
+        "quantity": "15",
+        "unit": "g"
+      }
+    ],
+    "steps": [
+      "Precalentar el horno a 220°C (calor arriba/abajo).",
+      "En un bol amplio, mezclar el queso crema, la nata, los huevos, el azúcar y la maicena. Batir hasta que quede bien integrado.",
+      "Colocar papel de horno dentro de un molde de 25 cm y verter la mezcla.",
+      "Hornear durante 40 minutos a 220°C.",
+      "Retirar del horno y dejar templar (la tarta temblará, se asentará al reposar).",
+      "Meter en la nevera y consumir al día siguiente."
+    ],
+    "source": "https://vm.tiktok.com/ZGeUArdsq/",
+    "image": "images/tarta_de_queso_de_la_vina.jpg",
+    "created_at": "2026-06-08T15:43:00Z"
+  },
+  {
+    "id": "f3cfc750-3237-4da8-9424-9edb776f3afd",
+    "title": "Alitas en agua",
+    "tags": [
+      "pollo",
+      "cena",
+      "rapida"
+    ],
+    "prep_time_min": 5,
+    "cook_time_min": 15,
+    "difficulty": "easy",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "alitas de pollo",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimienta",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimentón (paprika)",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "ajo",
+        "quantity": "2",
+        "unit": "dientes"
+      },
+      {
+        "name": "salsa de soja",
+        "quantity": "2",
+        "unit": "cucharadas"
+      },
+      {
+        "name": "salsa de tomate",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "miel",
+        "quantity": "1",
+        "unit": "cucharada"
+      }
+    ],
+    "steps": [
+      "Colocar las alitas de pollo en agua hirviendo, tapar y cocinar 5 minutos.",
+      "Agregar sal, pimienta, paprika al gusto y 2 dientes de ajo.",
+      "Cocinar por 5 minutos más.",
+      "Añadir 2 cucharadas de salsa de soja, 1 cucharada de salsa de tomate y 1 cucharada de miel.",
+      "Integrar bien con las alitas y dejar que terminen de cocinarse.",
+      "Servir caliente."
+    ],
+    "source": "https://vm.tiktok.com/ZGey52FLA/",
+    "image": "images/alitas_en_agua.jpg",
+    "created_at": "2026-06-08T15:43:00Z"
+  },
+  {
+    "id": "6ba72000-dfa0-41fb-93a1-95207fd9d636",
+    "title": "Puerros rellenos de gambones",
+    "tags": [
+      "verdura",
+      "pescado",
+      "cena"
+    ],
+    "prep_time_min": 15,
+    "cook_time_min": 20,
+    "difficulty": "medium",
+    "health_score": 8,
+    "ingredients": [
+      {
+        "name": "puerros",
+        "quantity": "4",
+        "unit": "unidades"
+      },
+      {
+        "name": "pimiento rojo",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "pimiento verde italiano",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "gambones troceados",
+        "quantity": "200",
+        "unit": "g"
+      },
+      {
+        "name": "aceite de oliva virgen extra",
+        "quantity": "4",
+        "unit": "cucharadas"
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimienta",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "semillas de sésamo",
+        "quantity": "",
+        "unit": "para decorar"
+      }
+    ],
+    "steps": [
+      "Separar las hojas exteriores de los puerros (3-4 por puerro), usando la parte blanca que es más tierna. Reservar el centro y el resto para el relleno y para caldo.",
+      "Escaldar las hojas de puerro en agua hirviendo 4-5 minutos. Pasarlas a agua fría y secarlas bien.",
+      "Picar el centro de los puerros (2-3 de los 4) junto con el pimiento rojo y el pimiento verde.",
+      "En una sartén con aceite de oliva, pochar las verduras picadas hasta que estén blandas.",
+      "Añadir los gambones troceados y saltear hasta que estén hechos. Salpimentar al gusto.",
+      "Rellenar las hojas de puerro con la mezcla y cerrar en forma de triángulo.",
+      "En la misma sartén, añadir un poco más de aceite y hacer los triángulos a la plancha a fuego medio hasta que se doren.",
+      "Servir con semillas de sésamo por encima."
+    ],
+    "source": "https://vm.tiktok.com/ZGeatkQ5p/",
+    "image": "images/puerros_rellenos_de_gambones.jpg",
+    "created_at": "2026-06-08T15:43:00Z"
+  },
+  {
+    "id": "7679da83-85b1-4a85-b1be-9651dd3bdfcb",
+    "title": "Bizcocho japonés",
+    "tags": [
+      "postre",
+      "desayuno",
+      "merienda"
+    ],
+    "prep_time_min": 15,
+    "cook_time_min": 30,
+    "difficulty": "medium",
+    "health_score": 6,
+    "ingredients": [
+      {
+        "name": "queso de untar (light o normal)",
+        "quantity": "350",
+        "unit": "g"
+      },
+      {
+        "name": "huevos",
+        "quantity": "3",
+        "unit": "unidades"
+      },
+      {
+        "name": "maicena",
+        "quantity": "25",
+        "unit": "g"
+      },
+      {
+        "name": "ralladura de limón",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "edulcorante",
+        "quantity": "",
+        "unit": "opcional"
+      },
+      {
+        "name": "sal",
+        "quantity": "1",
+        "unit": "pizca"
+      }
+    ],
+    "steps": [
+      "Separar las claras de las yemas de los 3 huevos.",
+      "Montar las claras a punto de nieve con una pizca de sal. Reservar.",
+      "En otro recipiente, batir las yemas con el queso de untar, la ralladura de limón, el edulcorante (al gusto) y la maicena hasta obtener una crema homogénea.",
+      "Incorporar las claras montadas a la crema poco a poco con movimientos envolventes para que no bajen.",
+      "Verter la mezcla en un recipiente apto para airfryer.",
+      "Cocinar en airfryer a 140°C durante 30-45 minutos hasta que esté dorado y esponjoso.",
+      "Servir solo o acompañado de coulis de frutos rojos, miel o chocolate derretido."
+    ],
+    "source": "https://vm.tiktok.com/ZGemWbhUL/",
+    "image": "images/bizcocho_japones.jpg",
+    "created_at": "2026-06-08T15:43:00Z"
+  },
+  {
+    "id": "927cee1e-ec35-4034-9d3d-44df3ca72ce7",
+    "title": "Tiramisú de la nonna",
+    "tags": [
+      "postre"
+    ],
+    "prep_time_min": 20,
+    "cook_time_min": 5,
+    "difficulty": "medium",
+    "health_score": 5,
+    "ingredients": [
+      {
+        "name": "huevos",
+        "quantity": "5",
+        "unit": "unidades"
+      },
+      {
+        "name": "azúcar",
+        "quantity": "120",
+        "unit": "g"
+      },
+      {
+        "name": "mascarpone",
+        "quantity": "750",
+        "unit": "g"
+      },
+      {
+        "name": "café",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "savoiardi (soletillas)",
+        "quantity": "",
+        "unit": ""
+      },
+      {
+        "name": "cacao en polvo",
+        "quantity": "",
+        "unit": "al gusto"
+      }
+    ],
+    "steps": [
+      "Separar las claras de las yemas de los 5 huevos.",
+      "Batir las yemas con la mitad del azúcar (60 g) hasta obtener una mezcla clara y espumosa.",
+      "Añadir todo el mascarpone a las yemas batidas y mezclar suavemente de abajo arriba.",
+      "Montar las claras a punto de nieve. Cuando empiecen a espumar, añadir el azúcar restante (60 g) poco a poco hasta obtener una consistencia firme.",
+      "Incorporar las claras montadas a la mezcla de mascarpone con movimientos envolventes.",
+      "Mojar los savoiardi en el café y colocarlos en una capa en el fondo de la fuente.",
+      "Cubrir con una capa de la crema de mascarpone.",
+      "Repetir capas de savoiardi y crema. Terminar con una capa de crema.",
+      "Espolvorear cacao en polvo por encima y refrigerar al menos 4 horas antes de servir."
+    ],
+    "source": "https://vm.tiktok.com/ZMYygQa8V/",
+    "image": "images/tiramisu_de_la_nonna.jpg",
+    "created_at": "2026-06-08T15:51:34Z"
+  },
+  {
+    "id": "75a2b418-5137-477d-863d-7c900d7e7c8b",
+    "title": "Bocadillo con crema de aguacate",
+    "tags": [
+      "rapida",
+      "cena",
+      "pescado"
+    ],
+    "prep_time_min": 5,
+    "cook_time_min": 0,
+    "difficulty": "easy",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "aguacate",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "queso crema para untar",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "atún al natural",
+        "quantity": "1",
+        "unit": "lata"
+      },
+      {
+        "name": "cebolla morada",
+        "quantity": "0.25",
+        "unit": "unidad"
+      },
+      {
+        "name": "zanahoria",
+        "quantity": "0.25",
+        "unit": "unidad"
+      },
+      {
+        "name": "tomate",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "zumo de limón",
+        "quantity": "1",
+        "unit": "chorrito"
+      },
+      {
+        "name": "especias japonesas (opcional)",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pan para bocadillo",
+        "quantity": "",
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Triturar medio aguacate con una cucharada de queso crema y una lata de atún escurrido hasta obtener una crema homogénea.",
+      "Picar finamente la cebolla morada, rallar la zanahoria y picar el tomate en dados pequeños.",
+      "Mezclar la crema de aguacate con las verduras picadas.",
+      "Añadir especias al gusto y un chorrito de zumo de limón. Mezclar bien.",
+      "Rellenar el pan del bocadillo con la mezcla y servir."
+    ],
+    "source": "https://vm.tiktok.com/ZMY5JqADD/",
+    "image": "images/bocadillo_con_crema_de_aguacate.jpg",
+    "created_at": "2026-06-08T15:51:34Z"
+  },
+  {
+    "id": "f1892b3f-1694-4807-9e01-a8d5668f0ba8",
+    "title": "Ñoquis crujientes",
+    "tags": [
+      "rapida",
+      "cena",
+      "verdura"
+    ],
+    "prep_time_min": 2,
+    "cook_time_min": 12,
+    "difficulty": "easy",
+    "health_score": 5,
+    "ingredients": [
+      {
+        "name": "ñoquis de patata (precocidos)",
+        "quantity": "1",
+        "unit": "paquete"
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimienta",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "especias al gusto",
+        "quantity": "",
+        "unit": "al gusto"
+      }
+    ],
+    "steps": [
+      "Poner los ñoquis en un bol y rociar con un poco de aceite de oliva.",
+      "Añadir sal, pimienta y las especias que más te gusten.",
+      "Mezclar bien para que los ñoquis se impregnen uniformemente.",
+      "Colocar los ñoquis en la cesta de la airfryer en una sola capa.",
+      "Cocinar a 190°C durante 10-12 minutos hasta que estén crujientes por fuera.",
+      "Servir caliente como snack o acompañamiento."
+    ],
+    "source": "https://vm.tiktok.com/ZMYHGwTpt/",
+    "image": "images/noquis_crujientes.jpg",
+    "created_at": "2026-06-08T15:51:34Z"
+  },
+  {
+    "id": "6b2f6207-b1b8-4889-afdf-e3a95bc2412a",
+    "title": "Ensalada de langostinos, aguacate y mango",
+    "tags": [
+      "ensalada",
+      "pescado",
+      "cena"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 0,
+    "difficulty": "easy",
+    "health_score": 9,
+    "ingredients": [
+      {
+        "name": "langostinos cocidos",
+        "quantity": "8",
+        "unit": "unidades"
+      },
+      {
+        "name": "mango maduro",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "aguacate mediano",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "cebolla morada",
+        "quantity": "0.5",
+        "unit": "unidad"
+      },
+      {
+        "name": "aceite de oliva virgen extra",
+        "quantity": "40",
+        "unit": "ml"
+      },
+      {
+        "name": "zumo de limón",
+        "quantity": "15",
+        "unit": "ml"
+      },
+      {
+        "name": "mostaza antigua",
+        "quantity": "0.5",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "sal",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimienta",
+        "quantity": "",
+        "unit": "al gusto"
+      }
+    ],
+    "steps": [
+      "Cortar los langostinos cocidos, el mango, el aguacate y la cebolla morada en trozos regulares.",
+      "Juntar todos los ingredientes en un bol.",
+      "Preparar la vinagreta: mezclar el aceite de oliva, el zumo de limón, la mostaza antigua, sal y pimienta. Emulsionar bien.",
+      "Rociar la vinagreta sobre la ensalada y mezclar suavemente.",
+      "Emplatar con ayuda de un aro para dar forma.",
+      "Decorar con un langostino entero y servir."
+    ],
+    "source": "https://vm.tiktok.com/ZGJxNDoGn/",
+    "image": "images/ensalada_de_langostinos_aguacate_y_mango.jpg",
+    "created_at": "2026-06-08T15:51:34Z"
   }
 ]
