@@ -17,7 +17,8 @@ def build_html(recipes_json_str):
         'ensalada':'🥗', 'verdura':'🥬', 'huevo':'🥚', 'sopa':'🍜', 'horno':'🔥'
     }
 
-    # Calculate latest recipe date
+    # Find latest recipe ISO timestamp for client-side dynamic update
+    latest_iso = ""
     dates = []
     for r in recipes:
         if r.get('created_at'):
@@ -28,18 +29,9 @@ def build_html(recipes_json_str):
                 pass
     if dates:
         latest = max(dates)
-        now = datetime.now(timezone.utc)
-        delta = now - latest
-        days = delta.days
-        hours = delta.seconds // 3600
-        if days == 0:
-            last_str = f"Última añadida hace {'unos minutos' if hours == 0 else str(hours)+'h'}"
-        elif days == 1:
-            last_str = "Última añadida hace 1 día"
-        else:
-            last_str = f"Última añadida hace {days} días"
-    else:
-        last_str = ""
+        latest_iso = latest.strftime('%Y-%m-%dT%H:%M:%SZ')
+        # keep a static fallback for non-JS or first load
+    last_str = "Recetario de cocina" if not latest_iso else ""  # placeholder, dynamic via JS
 
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -238,6 +230,7 @@ def build_html(recipes_json_str):
 
 <script>
 const RECIPES = {json.dumps(recipes, ensure_ascii=False, indent=2)};
+const LATEST_DATE = {('"' + latest_iso + '"' if latest_iso else 'null')};
 
 const DIFF_MAP = {json.dumps(DIFF_MAP, ensure_ascii=False)};
 const TAG_EMOJI = {json.dumps(TAG_EMOJI, ensure_ascii=False)};
@@ -390,6 +383,41 @@ document.getElementById('searchInput').addEventListener('input', filterAndRender
 document.addEventListener('keydown', function(e) {{
   if (e.key === 'Escape') closeDetail();
 }});
+
+// Dynamic last-added timer (client-side, updates in real time)
+function updateLastAdded() {{
+  const el = document.getElementById('lastAdded');
+  if (!LATEST_DATE) {{ el.textContent = ''; return; }}
+  const now = new Date();
+  const latest = new Date(LATEST_DATE);
+  const diff = (now - latest) / 1000;
+  const days = Math.floor(diff / 86400);
+  const hours = Math.floor((diff % 86400) / 3600);
+  const minutes = Math.floor((diff % 3600) / 60);
+  let text;
+  if (days >= 30) {{
+    const months = Math.floor(days / 30);
+    text = months === 1 ? '\u00daltima a\u00f1adida hace 1 mes' : '\u00daltima a\u00f1adida hace ' + months + ' meses';
+  }} else if (days >= 7) {{
+    const weeks = Math.floor(days / 7);
+    text = weeks === 1 ? '\u00daltima a\u00f1adida hace 1 semana' : '\u00daltima a\u00f1adida hace ' + weeks + ' semanas';
+  }} else if (days >= 2) {{
+    text = '\u00daltima a\u00f1adida hace ' + days + ' d\u00edas';
+  }} else if (days === 1) {{
+    text = '\u00daltima a\u00f1adida hace 1 d\u00eda';
+  }} else if (hours >= 2) {{
+    text = '\u00daltima a\u00f1adida hace ' + hours + ' horas';
+  }} else if (hours === 1) {{
+    text = '\u00daltima a\u00f1adida hace 1 hora';
+  }} else if (minutes >= 2) {{
+    text = '\u00daltima a\u00f1adida hace ' + minutes + ' minutos';
+  }} else {{
+    text = '\u00daltima a\u00f1adida hace unos segundos';
+  }}
+  el.textContent = text;
+}}
+updateLastAdded();
+setInterval(updateLastAdded, 30000); // refresh every 30s
 
 // Init
 renderTags();
