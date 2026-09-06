@@ -3902,5 +3902,93 @@
     "source": "https://vm.tiktok.com/ZN8eEVpb3/",
     "image": "images/noodles_salsa_sesamo_soja_miel.jpg",
     "created_at": "2026-08-01T20:14:14Z"
+  },
+  {
+    "id": "07c515e1-d11d-4769-a5c1-e5c8d0831617",
+    "title": "Pollo tailandés con verduras y almendras",
+    "tags": [
+      "pollo",
+      "cena",
+      "rapida",
+      "arroz"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 15,
+    "difficulty": "easy",
+    "health_score": 8,
+    "ingredients": [
+      {
+        "name": "contramuslo de pollo",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "harina de trigo",
+        "quantity": "1",
+        "unit": "taza"
+      },
+      {
+        "name": "salsa de soja",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "agua",
+        "quantity": "1",
+        "unit": "taza"
+      },
+      {
+        "name": "miel",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "aceite picante",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "cebolla",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "pimiento rojo",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "pimiento verde",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "almendras",
+        "quantity": "1",
+        "unit": "puñado"
+      },
+      {
+        "name": "arroz",
+        "quantity": "",
+        "unit": "para acompañar"
+      },
+      {
+        "name": "aceite",
+        "quantity": "",
+        "unit": "para cocinar"
+      }
+    ],
+    "steps": [
+      "Cortar el contramuslo de pollo en trozos y mezclarlo con la harina. Reservar.",
+      "Preparar la salsa: mezclar salsa de soja, agua, miel y un poco de aceite picante. Mezclar bien y reservar.",
+      "En una sartén con un poco de aceite, dorar el pollo enharinado. Retirar y reservar.",
+      "En la misma sartén, añadir un poco más de aceite y saltear la cebolla, el pimiento rojo y el pimiento verde.",
+      "Cuando las verduras estén listas, incorporar de nuevo el pollo.",
+      "Añadir la salsa reservada y un puñado de almendras. Cocinar a fuego medio unos 5 minutos hasta que la salsa reduzca.",
+      "Servir acompañado de arroz."
+    ],
+    "source": "https://vm.tiktok.com/ZGdQLcwrv/",
+    "image": "images/pollo_al_estilo_tailandes.jpg",
+    "created_at": "2026-09-06T14:07:57Z"
   }
 ]
