@@ -3990,5 +3990,73 @@
     "source": "https://vm.tiktok.com/ZGdQLcwrv/",
     "image": "images/pollo_al_estilo_tailandes.jpg",
     "created_at": "2026-09-06T14:07:57Z"
+  },
+  {
+    "id": "d8ce2b53-cda0-4915-8e79-657886e9efe5",
+    "title": "Tataki de salmón con crema de aguacate y pesto",
+    "tags": [
+      "pescado",
+      "rapida",
+      "cena"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 5,
+    "difficulty": "medium",
+    "health_score": 8,
+    "ingredients": [
+      {
+        "name": "lomo de salmón fresco",
+        "quantity": "1",
+        "unit": "trozo"
+      },
+      {
+        "name": "salsa de soja",
+        "quantity": "6",
+        "unit": "cucharadas"
+      },
+      {
+        "name": "zumo de naranja",
+        "quantity": "media",
+        "unit": "naranja"
+      },
+      {
+        "name": "semillas de sésamo",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "aguacate maduro",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "queso crema",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "pesto",
+        "quantity": "1",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "aceite",
+        "quantity": "",
+        "unit": "para la sartén"
+      }
+    ],
+    "steps": [
+      "Retirar la piel del lomo de salmón y limpiar bien.",
+      "Marinar el salmón en salsa de soja y zumo de naranja durante al menos 1 hora en la nevera.",
+      "Preparar la crema de aguacate: triturar el aguacate con el queso crema y el pesto hasta obtener una crema homogénea.",
+      "Pasado el tiempo de marinado, rebozar el salmón en semillas de sésamo por todos los lados.",
+      "Marcar el salmón en una sartén con un poco de aceite, vuelta y vuelta, dejando el interior poco hecho.",
+      "Cortar el salmón en rodajas con cuidado.",
+      "Reducir el marinado sobrante en la sartén hasta que espese.",
+      "Emplatar con una base de crema de aguacate, el salmón cortado encima y la salsa reducida por encima."
+    ],
+    "source": "https://vm.tiktok.com/ZGdQ9SA1q/",
+    "image": "images/tataki_salmon_crema_aguacate_pesto.jpg",
+    "created_at": "2026-09-19T13:55:57Z"
   }
 ]
