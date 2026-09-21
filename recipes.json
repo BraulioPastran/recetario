@@ -4151,5 +4151,87 @@
     "source": "https://vm.tiktok.com/ZGdQ4TdAD/",
     "image": "images/gyozas_caseras_cerdo.jpg",
     "created_at": "2026-09-21T20:57:00Z"
+  },
+  {
+    "id": "46c86371-427b-4377-94fe-e066bf4e8f69",
+    "title": "Huevos mayak (coreanos)",
+    "tags": [
+      "huevo",
+      "rapida",
+      "cena",
+      "arroz"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 6,
+    "difficulty": "easy",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "huevos",
+        "quantity": "4-6",
+        "unit": "unidades"
+      },
+      {
+        "name": "salsa de soja ligera",
+        "quantity": "150",
+        "unit": "ml"
+      },
+      {
+        "name": "agua",
+        "quantity": "150",
+        "unit": "ml"
+      },
+      {
+        "name": "miel",
+        "quantity": "1",
+        "unit": "chorrito"
+      },
+      {
+        "name": "cebolla",
+        "quantity": "1/2",
+        "unit": "unidad"
+      },
+      {
+        "name": "pimiento rojo",
+        "quantity": "1/2",
+        "unit": "unidad"
+      },
+      {
+        "name": "cebolleta china",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "ajo",
+        "quantity": "2",
+        "unit": "dientes"
+      },
+      {
+        "name": "semillas de sésamo",
+        "quantity": "1",
+        "unit": "cucharada"
+      },
+      {
+        "name": "aceite de sésamo",
+        "quantity": "1",
+        "unit": "cucharadita"
+      },
+      {
+        "name": "arroz",
+        "quantity": "",
+        "unit": "para servir"
+      }
+    ],
+    "steps": [
+      "Cocer los huevos exactamente 6 minutos desde que el agua hierva.",
+      "Pasarlos a un bol con agua fría y hielo para parar la cocción. Pelar con cuidado.",
+      "Preparar el marinado: mezclar la salsa de soja ligera, el agua, la miel, la cebolla picada, el pimiento rojo picado, la cebolleta china picada, el ajo triturado, las semillas de sésamo y el aceite de sésamo. Remover bien.",
+      "Colocar los huevos pelados en un recipiente y cubrirlos con el marinado.",
+      "Dejar reposar en la nevera toda la noche (mínimo 8 horas).",
+      "Servir los huevos con un poco de arroz y la salsa del marinado por encima."
+    ],
+    "source": "https://vm.tiktok.com/ZGdQ4HPQ4/",
+    "image": "images/huevos_mayak_coreanos.jpg",
+    "created_at": "2026-09-21T21:42:21Z"
   }
 ]
