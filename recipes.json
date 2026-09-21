@@ -4058,5 +4058,98 @@
     "source": "https://vm.tiktok.com/ZGdQ9SA1q/",
     "image": "images/tataki_salmon_crema_aguacate_pesto.jpg",
     "created_at": "2026-09-19T13:55:57Z"
+  },
+  {
+    "id": "5cbf7283-0b96-435f-a97b-3b82a9edcaae",
+    "title": "Gyozas caseras de cerdo",
+    "tags": [
+      "carne",
+      "cena",
+      "rapida"
+    ],
+    "prep_time_min": 30,
+    "cook_time_min": 10,
+    "difficulty": "medium",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "carne picada de cerdo",
+        "quantity": "500",
+        "unit": "g"
+      },
+      {
+        "name": "col o col rizada",
+        "quantity": "1/4",
+        "unit": "unidad"
+      },
+      {
+        "name": "cebolleta china",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "ajo",
+        "quantity": "1",
+        "unit": "diente"
+      },
+      {
+        "name": "jengibre fresco",
+        "quantity": "1",
+        "unit": "trozo"
+      },
+      {
+        "name": "salsa de soja",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "aceite de sésamo",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "sal",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "pimienta",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "láminas para gyozas",
+        "quantity": "1",
+        "unit": "paquete"
+      },
+      {
+        "name": "aceite",
+        "quantity": "",
+        "unit": "para cocinar"
+      },
+      {
+        "name": "aceite picante",
+        "quantity": "",
+        "unit": "para terminar"
+      },
+      {
+        "name": "semillas de sésamo",
+        "quantity": "",
+        "unit": "para decorar"
+      }
+    ],
+    "steps": [
+      "Picar la col muy pequeña y la cebolleta china. Rallar el ajo y el jengibre.",
+      "Mezclar la carne picada de cerdo con la col, la cebolleta, el ajo y el jengibre. Aliñar con salsa de soja, aceite de sésamo, sal y pimienta al gusto. Mezclar bien.",
+      "Colocar una cucharadita colmada de relleno en cada lámina de gyoza.",
+      "Pincelar los bordes con agua, hacer pliegues y presionar con los dedos para cerrar bien.",
+      "Aplanar ligeramente la base de cada gyoza para que se mantenga en pie.",
+      "Calentar un poco de aceite en una sartén a fuego medio-bajo y dorar las gyozas por la base un par de minutos.",
+      "Añadir agua hasta cubrir la base de la sartén, tapar y cocinar 3-5 minutos hasta que el agua se consuma.",
+      "Terminar con aceite picante, semillas de sésamo y la parte verde de la cebolleta china picada."
+    ],
+    "source": "https://vm.tiktok.com/ZGdQ4TdAD/",
+    "image": "images/gyozas_caseras_cerdo.jpg",
+    "created_at": "2026-09-21T20:57:00Z"
   }
 ]
