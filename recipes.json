@@ -4233,5 +4233,78 @@
     "source": "https://vm.tiktok.com/ZGdQ4HPQ4/",
     "image": "images/huevos_mayak_coreanos.jpg",
     "created_at": "2026-09-21T21:42:21Z"
+  },
+  {
+    "id": "25dd1902-43c7-4d2b-b25f-2b3f5cb0a69a",
+    "title": "Fideuá al horno",
+    "tags": [
+      "pasta",
+      "pollo",
+      "cena",
+      "horno"
+    ],
+    "prep_time_min": 15,
+    "cook_time_min": 25,
+    "difficulty": "easy",
+    "health_score": 8,
+    "ingredients": [
+      {
+        "name": "cebolla",
+        "quantity": "1/2",
+        "unit": "unidad"
+      },
+      {
+        "name": "ajo",
+        "quantity": "2",
+        "unit": "dientes"
+      },
+      {
+        "name": "pimiento verde",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "pimiento rojo",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "contramuslo de pollo",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "fideos para fideuá",
+        "quantity": "1",
+        "unit": "vaso"
+      },
+      {
+        "name": "caldo de pollo",
+        "quantity": "2",
+        "unit": "vasos"
+      },
+      {
+        "name": "sal",
+        "quantity": "al gusto",
+        "unit": ""
+      },
+      {
+        "name": "aceite de oliva",
+        "quantity": "",
+        "unit": ""
+      }
+    ],
+    "steps": [
+      "Precalentar el horno a 200°C.",
+      "Pochar la cebolla picada con los ajos rallados, el pimiento verde y el pimiento rojo troceados en una sartén con aceite.",
+      "Añadir los contramuslos de pollo troceados y saltear hasta dorar ligeramente.",
+      "Agregar un vaso de fideos para fideuá y dos vasos de caldo de pollo. Mezclar bien.",
+      "Cocinar en la sartén unos 12 minutos, luego pasar todo a una fuente de horno.",
+      "Meter al horno para gratinar hasta que la superficie esté tostada (unos 10 minutos).",
+      "Servir caliente."
+    ],
+    "source": "https://vm.tiktok.com/ZGdQpV1hL/",
+    "image": "images/fideua_al_horno.jpg",
+    "created_at": "2026-09-24T17:09:16Z"
   }
 ]
