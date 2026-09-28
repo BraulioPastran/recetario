@@ -3,7 +3,7 @@
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 
@@ -17,7 +17,6 @@ def build_html(recipes_json_str):
         'ensalada':'🥗', 'verdura':'🥬', 'huevo':'🥚', 'sopa':'🍜', 'horno':'🔥'
     }
 
-    # Find latest recipe ISO timestamp for client-side dynamic update
     latest_iso = ""
     dates = []
     for r in recipes:
@@ -30,8 +29,7 @@ def build_html(recipes_json_str):
     if dates:
         latest = max(dates)
         latest_iso = latest.strftime('%Y-%m-%dT%H:%M:%SZ')
-        # keep a static fallback for non-JS or first load
-    last_str = "Recetario de cocina" if not latest_iso else ""  # placeholder, dynamic via JS
+    last_str = "Recetario de cocina" if not latest_iso else ""
 
     return f"""<!DOCTYPE html>
 <html lang="es">
@@ -66,16 +64,16 @@ def build_html(recipes_json_str):
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }}
-  .container {{ max-width: 680px; margin: 0 auto; padding: 20px 16px 40px; }}
+  .container {{ max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }}
 
   /* Header */
   header {{ text-align: center; padding: 16px 0 8px; }}
-  header h1 {{ font-size: 1.6rem; font-weight: 700; letter-spacing: -.02em; }}
+  header h1 {{ font-size: 1.8rem; font-weight: 700; letter-spacing: -.02em; }}
   header .count {{ color: var(--text); font-size: 1rem; font-weight: 600; margin-top: 2px; }}
   header .sub {{ color: var(--muted); font-size: .8rem; margin-top: 0; }}
 
   /* Search */
-  .search-wrap {{ position: relative; margin: 16px 0 12px; }}
+  .search-wrap {{ position: relative; max-width: 680px; margin: 16px auto 12px; }}
   .search-wrap input {{
     width: 100%; padding: 14px 16px 14px 44px;
     border: 1.5px solid var(--border); border-radius: 14px;
@@ -88,7 +86,7 @@ def build_html(recipes_json_str):
   .search-icon {{ position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.2rem; color: var(--muted); pointer-events: none; }}
 
   /* Tags */
-  .tags-wrap {{ display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }}
+  .tags-wrap {{ display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-bottom: 24px; max-width: 800px; margin-left: auto; margin-right: auto; }}
   .tag-chip {{
     padding: 7px 14px; border-radius: 20px; font-size: .85rem; font-weight: 500;
     background: var(--tag-bg); color: var(--tag-text);
@@ -108,19 +106,30 @@ def build_html(recipes_json_str):
   }}
   .tag-more:hover {{ background: rgba(232,93,58,.08); }}
 
-  /* Cards */
-  .recipes {{ display: flex; flex-direction: column; gap: 16px; }}
+  /* Responsive Grid for Cards */
+  .recipes {{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }}
+  @media (min-width: 640px) {{
+    .recipes {{ grid-template-columns: repeat(2, 1fr); }}
+  }}
+  @media (min-width: 960px) {{
+    .recipes {{ grid-template-columns: repeat(3, 1fr); gap: 20px; }}
+  }}
+
   .card {{
     background: var(--card); border-radius: 16px; overflow: hidden;
     box-shadow: var(--shadow); transition: transform .15s, box-shadow .15s;
     cursor: pointer; -webkit-tap-highlight-color: transparent;
+    display: flex; flex-direction: column;
+    touch-action: manipulation;
   }}
-  .card {{ touch-action: manipulation; }}
-  .card:active {{ transform: scale(.99); }}
+  .card:active {{ transform: scale(.985); }}
   .card-img {{
     width: 100%; height: 200px; object-fit: cover;
     display: block; background: linear-gradient(135deg, #f0ece6, #e8e3dc);
-    font-size: 0;
   }}
   .card-img-placeholder {{
     width: 100%; height: 200px; display: flex;
@@ -128,9 +137,9 @@ def build_html(recipes_json_str):
     background: linear-gradient(135deg, #f0ece6, #e8e3dc);
     font-size: 3rem;
   }}
-  .card-body {{ padding: 14px 16px 16px; }}
-  .card-title {{ font-size: 1.15rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -.01em; }}
-  .card-meta {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .82rem; color: var(--muted); margin-bottom: 10px; }}
+  .card-body {{ padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }}
+  .card-title {{ font-size: 1.12rem; font-weight: 600; margin-bottom: 8px; letter-spacing: -.01em; line-height: 1.35; }}
+  .card-meta {{ display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: .82rem; color: var(--muted); margin-bottom: 10px; margin-top: auto; }}
   .card-meta span {{ display: inline-flex; align-items: center; gap: 4px; }}
   .meta-dot {{ width: 4px; height: 4px; border-radius: 50%; background: var(--border); margin: 0 2px; }}
   .card-tags {{ display: flex; flex-wrap: wrap; gap: 6px; }}
@@ -151,33 +160,69 @@ def build_html(recipes_json_str):
     animation: fadeIn .2s;
   }}
   .detail {{
-    background: var(--card); border-radius: 20px 20px 0 0;
-    width: 100%; max-width: 680px; max-height: 85vh; max-height: 85dvh;
+    background: var(--card); border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 680px; max-height: 88vh; max-height: 88dvh;
     overflow-y: auto; padding: 0; position: relative;
     -webkit-overflow-scrolling: touch;
     animation: slideUp .3s ease;
+    transition: transform .15s ease-out;
+  }}
+  /* Handle indicator for mobile swipe */
+  .drag-handle {{
+    width: 40px; height: 5px; border-radius: 3px;
+    background: #d4ccc3; margin: 10px auto 4px;
+    display: block;
   }}
   @keyframes fadeIn {{ from {{ opacity: 0 }} to {{ opacity: 1 }} }}
   @keyframes slideUp {{ from {{ transform: translateY(20%) }} to {{ transform: translateY(0) }} }}
+
   .detail-img {{
-    width: 100%; height: 220px; object-fit: cover; display: block; background: #f0ece6;
-    border-radius: 20px 20px 0 0;
+    width: 100%; height: 230px; object-fit: cover; display: block; background: #f0ece6;
   }}
-  .detail-content {{ padding: 20px; }}
+  .detail-content {{ padding: 18px 20px 30px; }}
   .detail-close {{
     position: absolute; top: 14px; right: 14px;
     width: 36px; height: 36px; border-radius: 50%; border: none;
-    background: rgba(0,0,0,.45); color: #fff; font-size: 1.2rem;
+    background: rgba(0,0,0,.5); color: #fff; font-size: 1.1rem;
     cursor: pointer; display: flex; align-items: center; justify-content: center;
     z-index: 10;
   }}
-  .detail h2 {{ font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }}
-  .detail-meta {{ font-size: .85rem; color: var(--muted); margin-bottom: 16px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }}
-  .detail h3 {{ font-size: 1rem; font-weight: 600; margin: 18px 0 10px; }}
-  .ingredient-list {{ list-style: none; display: flex; flex-direction: column; gap: 6px; }}
-  .ingredient-list li {{ padding: 8px 12px; background: #f9f7f3; border-radius: 10px; font-size: .9rem; }}
-  .step-list {{ list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 10px; }}
-  .step-list li {{ counter-increment: step; display: flex; gap: 12px; font-size: .9rem; line-height: 1.5; }}
+  .detail h2 {{ font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; line-height: 1.3; }}
+  .detail-meta {{ font-size: .85rem; color: var(--muted); margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }}
+  .detail h3 {{ font-size: 1.05rem; font-weight: 600; margin: 20px 0 10px; display: flex; align-items: center; justify-content: space-between; }}
+  .detail-hint {{ font-size: .75rem; color: var(--muted); font-weight: normal; }}
+
+  /* Interactive Ingredients (clickable/strikethrough) */
+  .ingredient-list {{ list-style: none; display: flex; flex-direction: column; gap: 7px; }}
+  .ingredient-list li {{
+    padding: 10px 14px; background: #f9f7f3; border-radius: 12px; font-size: .92rem;
+    cursor: pointer; transition: all .15s; user-select: none;
+    display: flex; align-items: center; gap: 10px;
+    border: 1px solid transparent;
+  }}
+  .ingredient-list li:active {{ background: #ece6dc; }}
+  .ingredient-list li.checked {{
+    text-decoration: line-through;
+    opacity: 0.55;
+    background: #f0ece6;
+  }}
+  .ingredient-check {{
+    width: 18px; height: 18px; border-radius: 4px;
+    border: 1.5px solid #a89f95; display: inline-flex;
+    align-items: center; justify-content: center; font-size: .75rem;
+    flex-shrink: 0; color: transparent;
+  }}
+  .ingredient-list li.checked .ingredient-check {{
+    background: var(--accent2); border-color: var(--accent2); color: #fff;
+  }}
+
+  /* Steps list */
+  .step-list {{ list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 12px; }}
+  .step-list li {{
+    counter-increment: step; display: flex; gap: 12px; font-size: .92rem; line-height: 1.55;
+    cursor: pointer; transition: opacity .15s;
+  }}
+  .step-list li.checked {{ opacity: 0.5; text-decoration: line-through; }}
   .step-list li::before {{
     content: counter(step);
     flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
@@ -185,11 +230,24 @@ def build_html(recipes_json_str):
     display: flex; align-items: center; justify-content: center;
     font-size: .8rem; font-weight: 600;
   }}
-  .detail-tags {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }}
-  .source-link {{
-    display: inline-block; margin-top: 12px; font-size: .82rem; color: var(--accent);
-    text-decoration: none; font-weight: 500;
+  .step-list li.checked::before {{
+    background: #8c8076;
   }}
+
+  .detail-tags {{ display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }}
+
+  /* Action Buttons in Modal (Share + Source) */
+  .detail-actions {{ display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }}
+  .btn-action {{
+    flex: 1; min-width: 140px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 10px 16px; border-radius: 12px; font-size: .88rem; font-weight: 600;
+    text-decoration: none; cursor: pointer; border: none; transition: background .15s;
+    -webkit-tap-highlight-color: transparent;
+  }}
+  .btn-share {{ background: var(--tag-bg); color: var(--text); }}
+  .btn-share:hover {{ background: #e8e2da; }}
+  .btn-source {{ background: rgba(232,93,58,.1); color: var(--accent); }}
+  .btn-source:hover {{ background: rgba(232,93,58,.16); }}
 
   /* No results */
   .no-results {{ text-align: center; padding: 40px 20px; color: var(--muted); display: none; }}
@@ -197,7 +255,7 @@ def build_html(recipes_json_str):
   .no-results .emoji {{ font-size: 3rem; margin-bottom: 12px; }}
 
   /* Scrollbar */
-  .detail::-webkit-scrollbar {{ width: 4px; }}
+  .detail::-webkit-scrollbar {{ width: 5px; }}
   .detail::-webkit-scrollbar-thumb {{ background: #d4ccc3; border-radius: 4px; }}
 </style>
 </head>
@@ -211,7 +269,7 @@ def build_html(recipes_json_str):
 
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input type="search" id="searchInput" placeholder="Buscar recetas..." autocomplete="off">
+    <input type="search" id="searchInput" placeholder="Buscar por plato, ingrediente (ej. aguacate)..." autocomplete="off">
   </div>
 
   <div class="tags-wrap" id="tagFilters"></div>
@@ -238,14 +296,14 @@ const TAG_EMOJI = {json.dumps(TAG_EMOJI, ensure_ascii=False)};
 function healthColor(score) {{
   if (score >= 8) return '#3a8c5e';
   if (score >= 5) return '#d4a017';
-  return '#c0392b';
+  return '#e85d3a';
 }}
 
-function formatTime(mins) {{
-  if (mins < 60) return mins + ' min';
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  return m > 0 ? h + 'h ' + m + 'min' : h + 'h';
+function formatTime(min) {{
+  if (min < 60) return min + 'min';
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m ? h + 'h ' + m + 'min' : h + 'h';
 }}
 
 const MAIN_TAGS = ['carne', 'pescado', 'pasta', 'huevo', 'verdura'];
@@ -299,7 +357,10 @@ function filterAndRender() {{
   const filtered = RECIPES.filter(r => {{
     if (activeTag && !r.tags.includes(activeTag)) return false;
     if (!query) return true;
-    const haystack = (r.title + ' ' + r.tags.join(' ') + ' ' + r.ingredients.map(i=>i.name).join(' ')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    
+    // Búsqueda profunda en título, etiquetas e ingredientes
+    const ingrText = r.ingredients.map(i => i.name).join(' ');
+    const haystack = (r.title + ' ' + r.tags.join(' ') + ' ' + ingrText).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     return haystack.includes(query);
   }});
 
@@ -324,29 +385,37 @@ function filterAndRender() {{
               <span class="meta-dot"></span>
               <span>${{DIFF_MAP[r.difficulty] || r.difficulty}}</span>
               <span class="meta-dot"></span>
-              <span><span class="health-dot" style="background:${{hc}}"></span> Salud ${{r.health_score}}/10</span>
+              <span><span class="health-dot" style="background:${{hc}}"></span> ${{r.health_score}}/10</span>
             </div>
-            <div class="card-tags">${{r.tags.map(t => `<span class="card-tag">${{TAG_EMOJI[t] || '🏷️'}} ${{t}}</span>`).join('')}}</div>
+            <div class="card-tags">
+              ${{r.tags.map(t => `<span class="card-tag">${{TAG_EMOJI[t] || '🏷️'}} ${{t}}</span>`).join('')}}
+            </div>
           </div>
-        </div>`;
+        </div>
+      `;
     }}).join('');
   }}
-  document.getElementById('recipeCount').textContent = `${{filtered.length}} de ${{RECIPES.length}} recetas guardadas`;
 }}
 
+let currentRecipe = null;
+
 function openDetail(id) {{
-  const r = RECIPES.find(r => r.id === id);
+  const r = RECIPES.find(x => x.id === id);
   if (!r) return;
+  currentRecipe = r;
+
   const totalTime = r.prep_time_min + r.cook_time_min;
   const hc = healthColor(r.health_score);
   const detail = document.getElementById('detailPane');
+
   detail.innerHTML = `
-    ${{r.image ? `<img class="detail-img" src="${{r.image}}" alt="${{r.title}}" onerror="this.parentNode.insertBefore(Object.assign(document.createElement('div'),{{className:'card-img-placeholder',textContent:'🍽️',style:'border-radius:20px 20px 0 0;height:220px'}}), this); this.remove();">` : ''}}
-    <button class="detail-close" onclick="closeDetail()">✕</button>
+    <div class="drag-handle"></div>
+    ${{r.image ? `<img class="detail-img" src="${{r.image}}" alt="${{r.title}}" onerror="this.parentNode.insertBefore(Object.assign(document.createElement('div'),{{className:'card-img-placeholder',textContent:'🍽️',style:'height:220px'}}), this); this.remove();">` : ''}}
+    <button class="detail-close" onclick="closeDetail()" aria-label="Cerrar">✕</button>
     <div class="detail-content">
       <h2>${{r.title}}</h2>
       <div class="detail-meta">
-        <span>⏱️ Prep: ${{r.prep_time_min}}min · Cocción: ${{r.cook_time_min}}min · Total: ${{formatTime(totalTime)}}</span>
+        <span>⏱️ Prep: ${{r.prep_time_min}}m · Cocción: ${{r.cook_time_min}}m · Total: ${{formatTime(totalTime)}}</span>
         <span class="meta-dot"></span>
         <span>${{DIFF_MAP[r.difficulty] || r.difficulty}}</span>
         <span class="meta-dot"></span>
@@ -354,24 +423,93 @@ function openDetail(id) {{
       </div>
       <div class="detail-tags">${{r.tags.map(t => `<span class="card-tag">${{TAG_EMOJI[t] || '🏷️'}} ${{t}}</span>`).join('')}}</div>
 
-      <h3>🧂 Ingredientes</h3>
+      <h3>
+        <span>🧂 Ingredientes</span>
+        <span class="detail-hint">Toca para tachar</span>
+      </h3>
       <ul class="ingredient-list">
-        ${{r.ingredients.map(i => `<li><strong>${{i.name}}</strong>${{i.quantity ? ' — ' + i.quantity + (i.unit ? ' ' + i.unit : '') : ''}}</li>`).join('')}}
+        ${{r.ingredients.map(i => `
+          <li onclick="this.classList.toggle('checked')">
+            <span class="ingredient-check">✓</span>
+            <span><strong>${{i.name}}</strong>${{i.quantity ? ' — ' + i.quantity + (i.unit ? ' ' + i.unit : '') : ''}}</span>
+          </li>
+        `).join('')}}
       </ul>
 
-      <h3>📝 Preparación</h3>
-      <ol class="step-list">${{r.steps.map(s => `<li>${{s}}</li>`).join('')}}</ol>
+      <h3>
+        <span>📝 Preparación</span>
+        <span class="detail-hint">Toca para marcar</span>
+      </h3>
+      <ol class="step-list">
+        ${{r.steps.map(s => `<li onclick="this.classList.toggle('checked')">${{s}}</li>`).join('')}}
+      </ol>
 
-      <a class="source-link" href="${{r.source}}" target="_blank" rel="noopener">🔗 Ver receta original</a>
+      <div class="detail-actions">
+        <button class="btn-action btn-share" onclick="shareRecipe()">📤 Compartir</button>
+        ${{r.source ? `<a class="btn-action btn-source" href="${{r.source}}" target="_blank" rel="noopener">🔗 Ver original</a>` : ''}}
+      </div>
     </div>
   `;
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  setupSwipeToClose(detail);
 }}
 
 function closeDetail() {{
   document.getElementById('overlay').classList.remove('open');
   document.body.style.overflow = '';
+  currentRecipe = null;
+}}
+
+function shareRecipe() {{
+  if (!currentRecipe) return;
+  const title = currentRecipe.title;
+  const url = currentRecipe.source || window.location.href;
+  if (navigator.share) {{
+    navigator.share({{
+      title: title,
+      text: 'Receta de ' + title + ' en mi recetario:',
+      url: url
+    }}).catch(() => {{}});
+  }} else {{
+    navigator.clipboard.writeText(title + ' - ' + url);
+    alert('¡Enlace copiado al portapapeles!');
+  }}
+}}
+
+// Gesto de swipe hacia abajo para cerrar en móvil
+function setupSwipeToClose(el) {{
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
+
+  el.ontouchstart = (e) => {{
+    if (el.scrollTop === 0) {{
+      startY = e.touches[0].clientY;
+      isDragging = true;
+    }}
+  }};
+
+  el.ontouchmove = (e) => {{
+    if (!isDragging) return;
+    currentY = e.touches[0].clientY;
+    const diff = currentY - startY;
+    if (diff > 0 && el.scrollTop === 0) {{
+      el.style.transform = `translateY(${{diff}}px)`;
+    }}
+  }};
+
+  el.ontouchend = () => {{
+    if (!isDragging) return;
+    isDragging = false;
+    const diff = currentY - startY;
+    if (diff > 120 && el.scrollTop === 0) {{
+      closeDetail();
+    }}
+    el.style.transform = '';
+    startY = 0;
+    currentY = 0;
+  }};
 }}
 
 document.getElementById('overlay').addEventListener('click', function(e) {{
@@ -384,7 +522,7 @@ document.addEventListener('keydown', function(e) {{
   if (e.key === 'Escape') closeDetail();
 }});
 
-// Dynamic last-added timer (client-side, updates in real time)
+// Dynamic last-added timer
 function updateLastAdded() {{
   const el = document.getElementById('lastAdded');
   if (!LATEST_DATE) {{ el.textContent = ''; return; }}
@@ -397,27 +535,27 @@ function updateLastAdded() {{
   let text;
   if (days >= 30) {{
     const months = Math.floor(days / 30);
-    text = months === 1 ? '\u00daltima a\u00f1adida hace 1 mes' : '\u00daltima a\u00f1adida hace ' + months + ' meses';
+    text = months === 1 ? 'Última añadida hace 1 mes' : 'Última añadida hace ' + months + ' meses';
   }} else if (days >= 7) {{
     const weeks = Math.floor(days / 7);
-    text = weeks === 1 ? '\u00daltima a\u00f1adida hace 1 semana' : '\u00daltima a\u00f1adida hace ' + weeks + ' semanas';
+    text = weeks === 1 ? 'Última añadida hace 1 semana' : 'Última añadida hace ' + weeks + ' semanas';
   }} else if (days >= 2) {{
-    text = '\u00daltima a\u00f1adida hace ' + days + ' d\u00edas';
+    text = 'Última añadida hace ' + days + ' días';
   }} else if (days === 1) {{
-    text = '\u00daltima a\u00f1adida hace 1 d\u00eda';
+    text = 'Última añadida hace 1 día';
   }} else if (hours >= 2) {{
-    text = '\u00daltima a\u00f1adida hace ' + hours + ' horas';
+    text = 'Última añadida hace ' + hours + ' horas';
   }} else if (hours === 1) {{
-    text = '\u00daltima a\u00f1adida hace 1 hora';
+    text = 'Última añadida hace 1 hora';
   }} else if (minutes >= 2) {{
-    text = '\u00daltima a\u00f1adida hace ' + minutes + ' minutos';
+    text = 'Última añadida hace ' + minutes + ' minutos';
   }} else {{
-    text = '\u00daltima a\u00f1adida hace unos segundos';
+    text = 'Última añadida hace unos segundos';
   }}
   el.textContent = text;
 }}
 updateLastAdded();
-setInterval(updateLastAdded, 30000); // refresh every 30s
+setInterval(updateLastAdded, 30000);
 
 // Init
 renderTags();
