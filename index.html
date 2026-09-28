@@ -187,18 +187,13 @@
   .step-list { list-style: none; counter-reset: step; display: flex; flex-direction: column; gap: 12px; }
   .step-list li {
     counter-increment: step; display: flex; gap: 12px; font-size: .92rem; line-height: 1.55;
-    cursor: pointer; transition: opacity .15s;
   }
-  .step-list li.checked { opacity: 0.5; text-decoration: line-through; }
   .step-list li::before {
     content: counter(step);
     flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
     background: var(--accent); color: #fff;
     display: flex; align-items: center; justify-content: center;
     font-size: .8rem; font-weight: 600;
-  }
-  .step-list li.checked::before {
-    background: #8c8076;
   }
 
   .detail-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
@@ -4483,15 +4478,35 @@ function toggleTag(tag) {
 function filterAndRender() {
   const q = document.getElementById('searchInput').value.trim();
   const query = q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  const filtered = RECIPES.filter(r => {
-    if (activeTag && !r.tags.includes(activeTag)) return false;
-    if (!query) return true;
-    
-    // Búsqueda profunda en título, etiquetas e ingredientes
-    const ingrText = r.ingredients.map(i => i.name).join(' ');
-    const haystack = (r.title + ' ' + r.tags.join(' ') + ' ' + ingrText).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-    return haystack.includes(query);
-  });
+
+  let filtered = [];
+
+  if (!query) {
+    filtered = RECIPES.filter(r => !activeTag || r.tags.includes(activeTag));
+  } else {
+    const withTitle = [];
+    const withTag = [];
+    const withIngredient = [];
+
+    RECIPES.forEach(r => {
+      if (activeTag && !r.tags.includes(activeTag)) return;
+
+      const titleNorm = r.title.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const tagsNorm = r.tags.join(' ').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const ingrNorm = r.ingredients.map(i => i.name).join(' ').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+      if (titleNorm.includes(query)) {
+        withTitle.push(r);
+      } else if (tagsNorm.includes(query)) {
+        withTag.push(r);
+      } else if (ingrNorm.includes(query)) {
+        withIngredient.push(r);
+      }
+    });
+
+    // Prioridad: 1. Título -> 2. Tags -> 3. Ingredientes
+    filtered = [...withTitle, ...withTag, ...withIngredient];
+  }
 
   const list = document.getElementById('recipeList');
   const noRes = document.getElementById('noResults');
@@ -4567,10 +4582,9 @@ function openDetail(id) {
 
       <h3>
         <span>📝 Preparación</span>
-        <span class="detail-hint">Toca para marcar</span>
       </h3>
       <ol class="step-list">
-        ${r.steps.map(s => `<li onclick="this.classList.toggle('checked')">${s}</li>`).join('')}
+        ${r.steps.map(s => `<li>${s}</li>`).join('')}
       </ol>
 
       <div class="detail-actions">
