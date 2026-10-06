@@ -4159,5 +4159,76 @@
     "source": "https://vm.tiktok.com/ZGdQnsVFw/",
     "image": "images/ramen_miso_rapido.jpg",
     "created_at": "2026-09-26T19:55:13Z"
+  },
+  {
+    "id": "c2b78100-f28a-45e7-82a5-e38a20cef2ae",
+    "title": "Hamburguesa de papel de arroz (alta en proteína)",
+    "tags": [
+      "carne",
+      "rapida",
+      "cena"
+    ],
+    "prep_time_min": 10,
+    "cook_time_min": 12,
+    "difficulty": "easy",
+    "health_score": 7,
+    "ingredients": [
+      {
+        "name": "láminas de papel de arroz",
+        "quantity": "2",
+        "unit": "unidades"
+      },
+      {
+        "name": "hamburguesa de carne magra",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "huevo",
+        "quantity": "1",
+        "unit": "unidad"
+      },
+      {
+        "name": "cheddar",
+        "quantity": "2",
+        "unit": "lonchas"
+      },
+      {
+        "name": "lechuga",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "pimientos amarillos encurtidos",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "cebolla caramelizada",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "salsa estilo Big Mac saludable",
+        "quantity": "",
+        "unit": "al gusto"
+      },
+      {
+        "name": "semillas de sésamo",
+        "quantity": "",
+        "unit": "para decorar"
+      }
+    ],
+    "steps": [
+      "Cocinar la hamburguesa de carne casi hasta que esté hecha, sin terminarla del todo para que quede jugosa en la airfryer.",
+      "Batir el huevo y empapar ambas láminas de papel de arroz con el huevo batido.",
+      "Colocar la hamburguesa, el cheddar, la lechuga, los pimientos encurtidos, la cebolla caramelizada y la salsa en el centro de una lámina de papel de arroz.",
+      "Cubrir con la otra lámina de papel de arroz y doblar los bordes para sellar la hamburguesa.",
+      "Cocinar en la airfryer a 190°C durante 10 minutos o hasta que esté crujiente.",
+      "Espolvorear con semillas de sésamo y servir."
+    ],
+    "source": "https://vm.tiktok.com/ZGdCFx71e/",
+    "image": "images/hamburguesa_de_papel_de_arroz.jpg",
+    "created_at": "2026-10-06T15:25:42Z"
   }
 ]
