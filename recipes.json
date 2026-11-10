@@ -5,7 +5,8 @@
     "tags": [
       "pescado",
       "rapida",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 10,
     "cook_time_min": 5,
@@ -71,7 +72,8 @@
     "tags": [
       "pescado",
       "cena",
-      "arroz"
+      "arroz",
+      "asiatica"
     ],
     "prep_time_min": 25,
     "cook_time_min": 20,
@@ -167,7 +169,8 @@
     "tags": [
       "pescado",
       "rapida",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 10,
     "cook_time_min": 10,
@@ -317,7 +320,8 @@
     "tags": [
       "arroz",
       "pescado",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 15,
     "cook_time_min": 20,
@@ -405,7 +409,9 @@
     "tags": [
       "arroz",
       "rapida",
-      "cena"
+      "cena",
+      "asiatica",
+      "vegetariano"
     ],
     "prep_time_min": 5,
     "cook_time_min": 10,
@@ -503,8 +509,8 @@
     "title": "Bollos de pizza sabor pan de ajo rellenos de queso",
     "tags": [
       "horno",
-      "rapida",
-      "cena"
+      "cena",
+      "vegetariano"
     ],
     "prep_time_min": 30,
     "cook_time_min": 20,
@@ -563,7 +569,8 @@
       "verdura",
       "ensalada",
       "cena",
-      "rapida"
+      "rapida",
+      "vegetariano"
     ],
     "prep_time_min": 15,
     "cook_time_min": 5,
@@ -686,7 +693,7 @@
       "rapida",
       "pescado",
       "cena",
-      "merienda"
+      "asiatica"
     ],
     "prep_time_min": 10,
     "cook_time_min": 10,
@@ -805,7 +812,9 @@
     "title": "Huevos para ramen (ramen eggs)",
     "tags": [
       "huevo",
-      "rapida"
+      "rapida",
+      "asiatica",
+      "vegetariano"
     ],
     "prep_time_min": 5,
     "cook_time_min": 7,
@@ -991,7 +1000,9 @@
     "tags": [
       "cena",
       "horno",
-      "rapida"
+      "rapida",
+      "huevo",
+      "vegetariano"
     ],
     "prep_time_min": 10,
     "cook_time_min": 18,
@@ -1082,7 +1093,8 @@
     "tags": [
       "ensalada",
       "cena",
-      "rapida"
+      "rapida",
+      "horno"
     ],
     "prep_time_min": 15,
     "cook_time_min": 10,
@@ -1491,7 +1503,9 @@
     "tags": [
       "rapida",
       "pescado",
-      "cena"
+      "cena",
+      "arroz",
+      "asiatica"
     ],
     "prep_time_min": 10,
     "cook_time_min": 0,
@@ -1551,7 +1565,8 @@
     "tags": [
       "pasta",
       "pollo",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 15,
     "cook_time_min": 20,
@@ -1670,7 +1685,8 @@
     "title": "Tarta de manzana exprés",
     "tags": [
       "postre",
-      "rapida"
+      "rapida",
+      "horno"
     ],
     "prep_time_min": 10,
     "cook_time_min": 15,
@@ -1837,7 +1853,9 @@
       "cena",
       "rapida",
       "huevo",
-      "verdura"
+      "verdura",
+      "horno",
+      "vegetariano"
     ],
     "prep_time_min": 5,
     "cook_time_min": 15,
@@ -1893,7 +1911,9 @@
     "tags": [
       "pasta",
       "carne",
-      "cena"
+      "cena",
+      "rapida",
+      "asiatica"
     ],
     "prep_time_min": 15,
     "cook_time_min": 15,
@@ -2279,7 +2299,7 @@
     "tags": [
       "horno",
       "cena",
-      "rapida"
+      "vegetariano"
     ],
     "prep_time_min": 20,
     "cook_time_min": 15,
@@ -2471,7 +2491,8 @@
     "tags": [
       "postre",
       "desayuno",
-      "merienda"
+      "merienda",
+      "horno"
     ],
     "prep_time_min": 15,
     "cook_time_min": 30,
@@ -2598,7 +2619,9 @@
     "tags": [
       "rapida",
       "cena",
-      "verdura"
+      "pasta",
+      "horno",
+      "vegetariano"
     ],
     "prep_time_min": 2,
     "cook_time_min": 12,
@@ -2649,7 +2672,8 @@
     "tags": [
       "ensalada",
       "pescado",
-      "cena"
+      "cena",
+      "rapida"
     ],
     "prep_time_min": 10,
     "cook_time_min": 0,
@@ -2720,7 +2744,8 @@
     "tags": [
       "pescado",
       "cena",
-      "rapida"
+      "rapida",
+      "asiatica"
     ],
     "prep_time_min": 15,
     "cook_time_min": 5,
@@ -2835,7 +2860,8 @@
     "tags": [
       "pasta",
       "cena",
-      "rapida"
+      "rapida",
+      "vegetariano"
     ],
     "prep_time_min": 5,
     "cook_time_min": 15,
@@ -2898,7 +2924,9 @@
     "tags": [
       "sopa",
       "verdura",
-      "cena"
+      "cena",
+      "horno",
+      "vegetariano"
     ],
     "prep_time_min": 15,
     "cook_time_min": 30,
@@ -3053,7 +3081,8 @@
     "tags": [
       "pollo",
       "cena",
-      "rapida"
+      "rapida",
+      "horno"
     ],
     "prep_time_min": 5,
     "cook_time_min": 20,
@@ -3124,7 +3153,8 @@
     "title": "Coliflor steak con chimichurri y puré de butter beans",
     "tags": [
       "verdura",
-      "cena"
+      "cena",
+      "vegetariano"
     ],
     "prep_time_min": 15,
     "cook_time_min": 20,
@@ -3221,7 +3251,8 @@
     "title": "Cheesecake light",
     "tags": [
       "postre",
-      "rapida"
+      "rapida",
+      "horno"
     ],
     "prep_time_min": 5,
     "cook_time_min": 15,
@@ -3268,7 +3299,8 @@
       "verdura",
       "cena",
       "rapida",
-      "merienda"
+      "merienda",
+      "vegetariano"
     ],
     "prep_time_min": 15,
     "cook_time_min": 10,
@@ -3353,7 +3385,8 @@
     "title": "Masa de pizza italiana",
     "tags": [
       "cena",
-      "horno"
+      "horno",
+      "vegetariano"
     ],
     "prep_time_min": 30,
     "cook_time_min": 20,
@@ -3444,7 +3477,8 @@
     "title": "Tarta de manzana exprés",
     "tags": [
       "postre",
-      "rapida"
+      "rapida",
+      "horno"
     ],
     "prep_time_min": 10,
     "cook_time_min": 15,
@@ -3499,8 +3533,8 @@
     "title": "Pollo Kung Pao fácil (salteado con salsa de soja y cacahuetes)",
     "tags": [
       "pollo",
-      "rapida",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 25,
     "cook_time_min": 10,
@@ -3598,7 +3632,8 @@
     "tags": [
       "pasta",
       "rapida",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 5,
     "cook_time_min": 5,
@@ -3665,7 +3700,8 @@
       "pollo",
       "cena",
       "rapida",
-      "arroz"
+      "arroz",
+      "asiatica"
     ],
     "prep_time_min": 10,
     "cook_time_min": 15,
@@ -3752,7 +3788,8 @@
     "tags": [
       "pescado",
       "rapida",
-      "cena"
+      "cena",
+      "asiatica"
     ],
     "prep_time_min": 10,
     "cook_time_min": 5,
@@ -3820,7 +3857,7 @@
     "tags": [
       "carne",
       "cena",
-      "rapida"
+      "asiatica"
     ],
     "prep_time_min": 30,
     "cook_time_min": 10,
@@ -3914,7 +3951,9 @@
       "huevo",
       "rapida",
       "cena",
-      "arroz"
+      "arroz",
+      "asiatica",
+      "vegetariano"
     ],
     "prep_time_min": 10,
     "cook_time_min": 6,
@@ -4069,7 +4108,9 @@
       "pasta",
       "rapida",
       "cena",
-      "huevo"
+      "huevo",
+      "sopa",
+      "asiatica"
     ],
     "prep_time_min": 15,
     "cook_time_min": 10,
@@ -4166,7 +4207,8 @@
     "tags": [
       "carne",
       "rapida",
-      "cena"
+      "cena",
+      "horno"
     ],
     "prep_time_min": 10,
     "cook_time_min": 12,
@@ -4238,7 +4280,8 @@
       "carne",
       "rapida",
       "cena",
-      "asiatica"
+      "asiatica",
+      "pollo"
     ],
     "prep_time_min": 20,
     "cook_time_min": 10,
@@ -4314,7 +4357,6 @@
     "title": "Canelones de arroz con ternera y queso",
     "tags": [
       "carne",
-      "rapida",
       "cena",
       "horno"
     ],
@@ -4406,9 +4448,7 @@
     "title": "Tarta de manzana (3 ingredientes)",
     "tags": [
       "postre",
-      "rapida",
-      "horno",
-      "vegetariano"
+      "horno"
     ],
     "prep_time_min": 10,
     "cook_time_min": 35,
