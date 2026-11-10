@@ -8,7 +8,10 @@ f-string) con marcadores __ASI__ que se sustituyen con str.replace().
 Las llaves de CSS y JS se escriben tal cual, sin doblarlas.
 
 Salida: la línea «✅ Generated …» va por stdout; los AVISO, por stderr.
-La salida es determinista: con los mismos datos, el mismo index.html.
+La salida es determinista: con los mismos datos (y las mismas fotos), el mismo index.html.
+
+App instalable: manifest.webmanifest, sw.js e icons/ son ficheros fijos del repositorio;
+este script no los toca. Solo añade a cada foto una huella de su contenido (?v=…).
 """
 
 import hashlib
@@ -65,11 +68,17 @@ TEMPLATE = r'''<!doctype html>
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F3F5F8" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0D1117" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230C7A56'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='34' font-weight='800' text-anchor='middle' fill='%23fff'%3ER%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- App instalable: manifiesto, iconos (icons/) y service worker (sw.js), ficheros fijos del repositorio. -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Recetario">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Fuentes sin bloquear el primer pintado: mientras llegan se usa la del sistema. -->
-<link rel="stylesheet" href="__FONTS_CSS__" media="print" onload="this.media='all'">
+<!-- Fuentes sin bloquear el primer pintado: mientras llegan se usa la del sistema.
+     crossorigin: así el service worker puede guardar la hoja de estilos para usarla sin conexión. -->
+<link rel="stylesheet" href="__FONTS_CSS__" media="print" onload="this.media='all'" crossorigin>
 <noscript><link rel="stylesheet" href="__FONTS_CSS__"></noscript>
 <style>
 /* ---------- Tokens ---------- */
@@ -601,6 +610,22 @@ input:checked~.q,input:checked~.n{text-decoration:line-through;color:var(--ink-2
 .seg label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
 .s-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .s-build{margin-top:24px}
+/* Instalar como app y pasar los datos entre el navegador y la app */
+.sheet-body p+p{margin-top:8px}
+.sheet-body p strong{color:var(--ink);font-weight:700}
+.s-how .ico{width:18px;height:18px;margin:0 2px;vertical-align:-3px;color:var(--ink)}
+.sheet-body .s-warn{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);color:var(--ink)}
+.s-paste{display:grid;gap:8px;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+.s-paste label{font-size:.9375rem;color:var(--ink-2)}
+.s-paste textarea{display:block;width:100%;min-height:88px;padding:10px 12px;border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);font:400 16px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;word-break:break-all;resize:vertical}
+.s-paste .s-actions{margin-top:0}
+/* En Ajustes los botones llenan la fila: en el móvil quedan todos del mismo ancho. */
+#settings .s-actions>.btn{flex:1 1 auto}
+.hint{display:flex;align-items:flex-start;gap:4px;margin-top:8px;padding:12px 4px 12px 16px;border-radius:18px;background:var(--accent-soft);color:var(--ink)}
+.hint-body{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding-top:2px}
+.hint-body p{font-size:.9375rem;line-height:1.45}
+.hint .icon-btn{margin-top:-8px}
+.hint .icon-btn:hover{background:rgb(0 0 0/.06)}
 kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--line-strong);border-radius:6px;font:700 .8125rem/20px var(--font-ui);text-align:center;color:var(--ink)}
 @media (hover:none) and (pointer:coarse){.s-keys{display:none}}
 
@@ -668,6 +693,8 @@ kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--l
 <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
 <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
 <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></symbol>
+<symbol id="i-clipboard" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol>
+<symbol id="i-square-plus" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></symbol>
 <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></symbol>
 </svg>
 
@@ -717,13 +744,14 @@ kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--l
     <button type="button" class="btn" id="random" data-action="random" aria-label="¿Qué cocino hoy? Elegir una receta al azar"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-dices"/></svg><span class="lbl">¿Qué cocino hoy?</span></button>
   </div>
   <div class="active-row" id="active-row" role="group" aria-label="Filtros activos" hidden></div>
+  <section class="hint" id="hint-move" aria-label="Pasar tus datos a la app" hidden></section>
   <div class="grid" id="grid" tabindex="-1"></div>
   <div class="empty" id="empty" hidden></div>
   <noscript><p>Esta web necesita JavaScript para mostrar las recetas.</p></noscript>
 </main>
 
 <footer class="foot wrap">
-  <p><span id="foot-txt">Tus favoritas se guardan solo en este dispositivo</span> · <button type="button" class="linkbtn" data-action="settings" data-focus="data">Mis datos</button></p>
+  <p><span id="foot-txt">Tus favoritas se guardan solo en este dispositivo</span> · <button type="button" class="linkbtn" data-action="settings" data-focus="data">Mis datos</button><span id="foot-install" hidden> · <button type="button" class="linkbtn" data-action="settings" data-focus="install">Instalar como app</button></span></p>
 </footer>
 
 <template id="tpl-card">
@@ -862,14 +890,28 @@ kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--l
         <label><input type="radio" name="theme" value="dark"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-moon"/></svg>Oscuro</label>
       </div>
     </fieldset>
+    <section aria-labelledby="s-install">
+      <h3 id="s-install" tabindex="-1">Instalar como app</h3>
+      <div id="s-install-body"></div>
+    </section>
     <section aria-labelledby="s-data">
       <h3 id="s-data" tabindex="-1">Mis datos</h3>
-      <p id="s-data-txt">Tus favoritas, notas y recetas hechas se guardan solo en este navegador. Descarga una copia para pasarlas a otro dispositivo.</p>
+      <p id="s-data-txt">Tus favoritas, notas y recetas hechas se guardan solo en este navegador. Cópialas o descarga una copia para pasarlas a la app instalada o a otro dispositivo.</p>
       <div class="s-actions">
+        <button type="button" class="btn" data-action="copy-data"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-copy"/></svg>Copiar mis datos</button>
+        <button type="button" class="btn" id="paste-btn" data-action="paste-data"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-clipboard"/></svg>Pegar mis datos</button>
         <button type="button" class="btn" data-action="export"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-download"/></svg>Descargar copia</button>
         <button type="button" class="btn" data-action="import"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-upload"/></svg>Importar copia</button>
         <input type="file" id="import-file" accept="application/json,.json" hidden>
         <button type="button" class="btn" id="wipe" data-action="wipe"><svg class="ico" aria-hidden="true" focusable="false"><use href="#i-trash"/></svg><span id="wipe-txt">Borrar mis datos</span></button>
+      </div>
+      <div class="s-paste" id="s-paste" hidden>
+        <label for="paste-box" id="paste-lbl">Pega aquí el código que copiaste (empieza por RECETARIO1:)</label>
+        <textarea id="paste-box" rows="3" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="RECETARIO1:…"></textarea>
+        <div class="s-actions">
+          <button type="button" class="btn btn-primary" data-action="paste-go">Importar</button>
+          <button type="button" class="btn" data-action="paste-cancel">Cancelar</button>
+        </div>
       </div>
     </section>
     <section class="s-keys" aria-labelledby="s-keys">
@@ -992,6 +1034,10 @@ const URL_RE = /^https?:\/\//i;
 const tagLabel = t => (Object.prototype.hasOwnProperty.call(TAG_LABEL, t) ? TAG_LABEL[t] : (t.charAt(0).toUpperCase() + t.slice(1)));
 const TAG_ICON = CONFIG.tagIcon || {}, TAG_HUE = CONFIG.tagHue || {};
 const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+// Huella del contenido de cada foto (la calcula generate.py): si se cambia la foto, cambia la URL
+// y ni el navegador ni el service worker sirven la vieja.
+const IMG_V = CONFIG.imgVersion && typeof CONFIG.imgVersion === 'object' ? CONFIG.imgVersion : {};
+const imgSrc = p => (own(IMG_V, p) && /^[0-9a-f]{6,40}$/.test(String(IMG_V[p])) ? p + '?v=' + IMG_V[p] : p);
 // Emoji decorativo de la etiqueta (el nombre siempre va en texto al lado o en la etiqueta accesible).
 function tagEmo(t) {
   if (!own(TAG_ICON, t)) return null;
@@ -1027,7 +1073,7 @@ const DATA = RAW.filter(r => r && typeof r === 'object').map((r, idx) => {
   return {
     id: uniqueId(r, title, idx), title, displayTitle: title, a11yTitle: title, dupNote: '', tags, ingredients, steps,
     prep, cook, total: prep + cook, ts: isNaN(ts) ? 0 : ts,
-    diff: String(r.difficulty || ''), health: toInt(r.health_score, 10), image, focusY, source,
+    diff: String(r.difficulty || ''), health: toInt(r.health_score, 10), image, src: image ? imgSrc(image) : '', focusY, source,
     nTitle: norm(title),
     nTags: norm(tags.map(t => t + ' ' + tagLabel(t)).join(' | ')),
     nIngr: ingredients.map(i => norm(i.name)),
@@ -1909,7 +1955,7 @@ function ensureImg(node, d, eager) {
   img.dataset.set = '1';
   img.setAttribute('loading', eager ? 'eager' : 'lazy');
   if (eager) img.setAttribute('fetchpriority', 'high');
-  img.src = d.image;
+  img.src = d.src;
   syncImg(node);
 }
 // Solo marca como cargada: «complete» no es fiable para detectar fotos rotas con loading=lazy.
@@ -2482,7 +2528,7 @@ function fillDetail(d) {
   openId = d.id;
   dHero.dataset.initial = initialOf(d);
   dHero.classList.toggle('is-broken', !d.image);
-  if (d.image) { if (dImg.getAttribute('src') !== d.image) dImg.src = d.image; }
+  if (d.image) { if (dImg.getAttribute('src') !== d.src) dImg.src = d.src; }
   else dImg.removeAttribute('src');
   if (d.focusY != null) dImg.style.setProperty('--img-y', d.focusY + '%'); else dImg.style.removeProperty('--img-y');
   const dKicker = $('#d-kicker');
@@ -2967,10 +3013,14 @@ function applyTheme(t) {
 }
 function currentTheme() { const t = lsGet('recetario:theme'); return t === 'light' || t === 'dark' ? t : 'auto'; }
 $$('input[name="theme"]').forEach(r => r.addEventListener('change', () => { if (r.checked) applyTheme(r.value); }));
-function openSettings(focusData) {
+// focus: 'data' (Mis datos) o 'install' (Instalar como app) para llevar ahí el foco.
+function openSettings(focus) {
   $$('input[name="theme"]').forEach(r => { r.checked = r.value === currentTheme(); });
-  try { settingsDlg.showModal(); } catch (e) { settingsDlg.setAttribute('open', ''); }
-  if (focusData) { const h = $('#s-data'); try { h.focus(); h.scrollIntoView({ block: 'nearest' }); } catch (e) {} }
+  renderInstall();
+  hidePaste();
+  if (!settingsDlg.open) { try { settingsDlg.showModal(); } catch (e) { settingsDlg.setAttribute('open', ''); } }
+  const h = focus === 'data' ? $('#s-data') : focus === 'install' ? $('#s-install') : null;
+  if (h) { try { h.focus(); h.scrollIntoView({ block: 'nearest' }); } catch (e) {} }
 }
 // Versión = huella del contenido publicado (determinista: no cambia si no cambian los datos ni la web).
 (function () {
@@ -2990,17 +3040,21 @@ function exportData() {
     setTimeout(() => URL.revokeObjectURL(a.href), 2000);
   } catch (e) { toast('No se pudo descargar la copia'); }
 }
+// La misma fusión para el archivo y para el código copiado (ver Store.importData).
+// read() devuelve el objeto de la copia o lanza si no lo es.
+async function importBackup(read, badMsg) {
+  let n;
+  try { n = await Store.importData(await read(), id => BY_ID.has(id)); } catch (e) { toast(badMsg); return false; }
+  toast(n.fav + n.rating + n.cooked === 0 ? 'No había nada nuevo que importar'
+    : 'Importadas: ' + n.fav + ' favoritas, ' + n.rating + ' notas, ' + n.cooked + ' hechas');
+  return true;
+}
 const importFile = $('#import-file');
-importFile.addEventListener('change', async () => {
+importFile.addEventListener('change', () => {
   const f = importFile.files && importFile.files[0];
   importFile.value = '';
   if (!f) return;
-  try {
-    const text = await f.text();
-    const n = await Store.importData(JSON.parse(text), id => BY_ID.has(id));
-    toast(n.fav + n.rating + n.cooked === 0 ? 'No había nada nuevo que importar'
-      : 'Importadas: ' + n.fav + ' favoritas, ' + n.rating + ' notas, ' + n.cooked + ' hechas');
-  } catch (e) { toast('Ese archivo no es una copia del recetario'); }
+  importBackup(async () => JSON.parse(await f.text()), 'Ese archivo no es una copia del recetario');
 });
 let wipeTimer = 0;
 function disarmWipe() {
@@ -3021,6 +3075,219 @@ function warnNotPersistent() {
   if (Store.persistent || persistWarned) return;
   persistWarned = true;
   toast('Este navegador no deja guardar tus datos: se perderán al cerrar');
+}
+
+/* =========================================================
+   App instalable: instalar, pasar los datos y service worker
+   ========================================================= */
+const UA = navigator.userAgent || '';
+const IS_IOS = /iPhone|iPad|iPod/.test(UA) || (/Macintosh/.test(UA) && navigator.maxTouchPoints > 1);
+const IS_MAC_SAFARI = !IS_IOS && /Macintosh/.test(UA) && /Version\/[\d.]+.*Safari/.test(UA) && !/Chrome|Chromium|Edg|OPR|Firefox/.test(UA);
+const IS_FIREFOX_DESKTOP = /Firefox\//.test(UA) && !/Android|Mobile|Tablet/.test(UA);
+const IN_APP = /Instagram|FBAN|FBAV|musical_ly|BytedanceWebview|TikTok/.test(UA); // navegador interno de una app
+// En iPhone, iPad y Mac, la app instalada guarda sus datos aparte de los del navegador.
+const APART = IS_IOS || IS_MAC_SAFARI;
+const BROWSER = APART && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(UA) ? 'Safari' : 'el navegador';
+const MQ_STANDALONE = mq('(display-mode: standalone)');
+const isStandalone = () => MQ_STANDALONE.matches || navigator.standalone === true;
+const DATA_TXT = $('#s-data-txt').textContent;
+let installEvt = null;  // beforeinstallprompt guardado (solo Chrome, Edge, Samsung Internet…)
+let installed = false;  // instalada durante esta visita
+window.addEventListener('beforeinstallprompt', e => { installEvt = e; if (settingsDlg.open) renderInstall(); });
+window.addEventListener('appinstalled', () => { installEvt = null; installed = true; askPersist(); syncInstallUI(); });
+onMQ(MQ_STANDALONE, () => syncInstallUI());
+
+function syncInstallUI() {
+  const sa = isStandalone();
+  $('#foot-install').hidden = sa;
+  if (Store.persistent) {
+    $('#s-data-txt').textContent = sa
+      ? 'Tus favoritas, notas y recetas hechas se guardan solo en esta app. Cópialas o descarga una copia para pasarlas a otro navegador o dispositivo.'
+      : DATA_TXT;
+  }
+  if (settingsDlg.open) renderInstall();
+  renderMoveHint();
+}
+// Explicación de «Instalar como app» según el navegador (se rehace cada vez que se abre Ajustes).
+function renderInstall() {
+  const box = $('#s-install-body');
+  const hadFocus = box.contains(document.activeElement);
+  box.textContent = '';
+  const para = (cls, parts) => {
+    const p = el('p', cls);
+    parts.forEach(x => p.append(typeof x === 'string' ? document.createTextNode(x) : x));
+    box.appendChild(p);
+    return p;
+  };
+  const b = t => el('strong', null, t);
+  if (isStandalone()) {
+    para(null, ['Ya la tienes instalada.']);
+    if (APART) para(null, ['Si tenías favoritas en ' + BROWSER + ', ábrela allí, pulsa ', b('Copiar mis datos'), ' y luego, aquí, ', b('Pegar mis datos'), '.']);
+  } else if (installed) {
+    para(null, ['Instalada. Ábrela desde la pantalla de inicio o desde tus apps.']);
+  } else {
+    para(null, ['Tendrás el recetario en la pantalla de inicio, a pantalla completa y también sin conexión.']);
+    if (installEvt) {
+      const acts = el('div', 's-actions');
+      const btn = el('button', 'btn btn-primary');
+      btn.type = 'button';
+      btn.dataset.action = 'install';
+      btn.append(icon('square-plus'), document.createTextNode('Instalar el recetario'));
+      acts.appendChild(btn);
+      box.appendChild(acts);
+    } else if (IN_APP) {
+      para(null, ['Para instalarla, ábrela antes en ' + (IS_IOS ? 'Safari' : 'Chrome') + ': en el menú de esta app, elige ', b('Abrir en el navegador'), '.']);
+    } else if (IS_IOS) {
+      para('s-how', ['Pulsa ', b('⋯'), ' o ', b('Compartir'), icon('share'), ' → ', b('Añadir a pantalla de inicio'), ' → ', b('Añadir'), '.']);
+    } else if (IS_MAC_SAFARI) {
+      para('s-how', ['En el menú ', b('Archivo'), ', elige ', b('Añadir al Dock'), '.']);
+    } else if (IS_FIREFOX_DESKTOP) {
+      para(null, ['Firefox para ordenador no instala webs como apps. Puedes hacerlo desde Chrome o Edge.']);
+    } else {
+      para('s-how', ['En el menú del navegador (⋮ o ⋯), elige ', b('Instalar app'), ' o ', b('Añadir a pantalla de inicio'), '.']);
+    }
+    if (APART && !IN_APP) para('s-warn', ['La app instalada guarda sus favoritas aparte de ' + BROWSER + ': copia tus datos aquí y pégalos en la app.']);
+  }
+  if (hadFocus) { try { $('#s-install').focus({ preventScroll: true }); } catch (e) {} }
+}
+async function promptInstall() {
+  const evt = installEvt;
+  installEvt = null;
+  if (evt && typeof evt.prompt === 'function') {
+    try {
+      await evt.prompt();
+      const choice = await evt.userChoice;
+      if (choice && choice.outcome === 'accepted') installed = true;
+    } catch (e) {}
+  }
+  renderInstall();
+  const ae = document.activeElement;
+  if (settingsDlg.open && (!ae || ae === document.body || !ae.isConnected)) { try { $('#s-install').focus({ preventScroll: true }); } catch (e) {} }
+}
+
+// Pedir almacenamiento persistente (una vez por visita): en la app instalada o al guardar la primera favorita.
+// El navegador decide sin preguntar (Chrome, Safari); Firefox puede preguntar. El resultado da igual.
+let persistAsked = false;
+function askPersist() {
+  if (persistAsked || !Store.persistent) return;
+  persistAsked = true;
+  try {
+    if (navigator.storage && typeof navigator.storage.persist === 'function') navigator.storage.persist().catch(() => {});
+  } catch (e) {}
+}
+
+// Código para pasar los datos copiando y pegando: «RECETARIO1:» + base64url del mismo JSON que «Descargar copia».
+const CODE_PREFIX = 'RECETARIO1:';
+const CODE_RE = /RECETARIO1:([A-Za-z0-9_-]+)/;
+function toB64url(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function fromB64url(s) {
+  s = s.replace(/-/g, '+').replace(/_/g, '/');
+  while (s.length % 4) s += '=';
+  const bin = atob(s), bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+}
+// Devuelve el objeto de la copia o lanza si el texto no lleva un código válido.
+function readCode(text) {
+  const m = CODE_RE.exec(String(text == null ? '' : text));
+  if (!m) throw new Error('Sin código del recetario');
+  return JSON.parse(fromB64url(m[1]));
+}
+function personalCount() {
+  const o = Store.exportData();
+  return Object.keys(o.fav).length + Object.keys(o.rating).length + Object.keys(o.cooked).length;
+}
+async function copyData() {
+  if (!personalCount()) { toast('Aún no tienes favoritas, notas ni recetas hechas que copiar'); return; }
+  const ok = await copyText(CODE_PREFIX + toB64url(JSON.stringify(Store.exportData())));
+  if (!ok) { toast('No se pudieron copiar tus datos'); return; }
+  toast(isStandalone() ? 'Datos copiados. Ahora, en ' + BROWSER + ', pulsa «Pegar mis datos»'
+    : APART ? 'Datos copiados. Ahora, en la app, pulsa «Pegar mis datos»'
+    : 'Datos copiados. Pégalos donde quieras con «Pegar mis datos»');
+}
+const pasteBox = $('#s-paste'), pasteArea = $('#paste-box'), pasteLbl = $('#paste-lbl');
+const PASTE_LBL = pasteLbl.textContent;
+function showPaste(msg) {
+  pasteLbl.textContent = msg || PASTE_LBL;
+  pasteBox.hidden = false;
+  try { pasteArea.focus(); pasteArea.scrollIntoView({ block: 'nearest' }); } catch (e) {}
+}
+function hidePaste() { pasteBox.hidden = true; pasteArea.value = ''; pasteLbl.textContent = PASTE_LBL; }
+// Lee el portapapeles si el navegador deja; si no (o no hay código), muestra un cuadro para pegar a mano.
+async function pasteData() {
+  let text = null;
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.readText === 'function' && window.isSecureContext) text = await navigator.clipboard.readText();
+  } catch (e) { text = null; }
+  if (text != null && CODE_RE.test(text) && await importBackup(() => readCode(text), 'Ese código no es una copia del recetario')) {
+    hidePaste();
+    return;
+  }
+  if (!settingsDlg.open) openSettings('data');
+  showPaste(text && text.trim() && !CODE_RE.test(text) ? 'En el portapapeles no hay un código del recetario. Pégalo aquí (empieza por RECETARIO1:)' : null);
+}
+async function pasteFromBox() {
+  const text = pasteArea.value;
+  if (!text.trim()) { toast('Pega primero el código'); pasteArea.focus(); return; }
+  if (await importBackup(() => readCode(text), 'Ese código no es una copia del recetario')) {
+    hidePaste();
+    try { $('#paste-btn').focus({ preventScroll: true }); } catch (e) {}
+  } else { try { pasteArea.focus(); } catch (e) {} }
+}
+settingsDlg.addEventListener('close', hidePaste);
+
+// En la app instalada de iPhone/iPad/Mac y sin datos aún: un aviso (una sola vez) para traerlos desde Safari.
+const HINT_KEY = 'recetario:hintMove';
+let hintGone = false; // por si no se puede guardar en localStorage
+function dismissHint() { hintGone = true; lsSet(HINT_KEY, '1'); renderMoveHint(); }
+function renderMoveHint() {
+  const box = $('#hint-move');
+  const sa = isStandalone() && APART;
+  if (sa && personalCount() > 0) { hintGone = true; lsSet(HINT_KEY, '1'); }
+  const show = sa && !DATA_ERROR && !hintGone && lsGet(HINT_KEY) !== '1';
+  if (!show) {
+    // Si el foco estaba en el aviso (cerrar o pegar), pasa al recuento en lugar de perderse.
+    const hadFocus = box.contains(document.activeElement);
+    box.hidden = true;
+    box.textContent = '';
+    if (hadFocus) { try { countEl.focus({ preventScroll: true }); } catch (e) {} }
+    return;
+  }
+  box.hidden = false;
+  if (box.firstChild) return;
+  const body = el('div', 'hint-body');
+  body.appendChild(el('p', null, '¿Tenías favoritas en ' + BROWSER + '? Ábrela en ' + BROWSER + ' → Ajustes → Copiar mis datos, y pégalas aquí.'));
+  const paste = el('button', 'btn btn-primary');
+  paste.type = 'button';
+  paste.dataset.action = 'paste-data';
+  paste.append(icon('clipboard'), document.createTextNode('Pegar mis datos'));
+  body.appendChild(paste);
+  const x = el('button', 'icon-btn');
+  x.type = 'button';
+  x.dataset.action = 'hint-dismiss';
+  x.setAttribute('aria-label', 'Cerrar este aviso');
+  x.appendChild(icon('x'));
+  box.append(body, x);
+}
+Store.onChange(() => renderMoveHint());
+
+// Service worker: solo con https (o localhost para probar). Sin él, la web funciona igual (también desde file://).
+function registerServiceWorker() {
+  try {
+    if (!('serviceWorker' in navigator)) return;
+    const h = location.hostname;
+    if (location.protocol !== 'https:' && h !== 'localhost' && h !== '127.0.0.1' && h !== '[::1]') return;
+    const go = () => {
+      navigator.serviceWorker.register('sw.js', { scope: './', updateViaCache: 'none' })
+        .catch(e => console.warn('Recetario: no se pudo registrar el service worker.', e));
+    };
+    if (document.readyState === 'complete') go(); else window.addEventListener('load', go, { once: true });
+  } catch (e) { console.warn('Recetario: no se pudo registrar el service worker.', e); }
 }
 
 /* =========================================================
@@ -3079,7 +3346,10 @@ document.addEventListener('click', e => {
       const on = !Store.isFavorite(id);
       Store.setFavorite(id, on);
       vibrate();
-      if (on) { t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop'); }
+      if (on) {
+        t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop');
+        if (favCount() === 1) askPersist(); // la primera favorita: que el navegador no la borre
+      }
       else toast('Quitada de favoritas', 'Deshacer', () => Store.setFavorite(id, true));
       break;
     }
@@ -3163,10 +3433,16 @@ document.addEventListener('click', e => {
       lsSet('recetario:cookScale', String(scaleIdx));
       applyScale();
       break;
-    case 'settings': openSettings(t.dataset.focus === 'data'); break;
+    case 'settings': openSettings(t.dataset.focus); break;
     case 'close-sheet': { const dlg = t.closest('dialog'); if (dlg) dlg.close(); break; }
     case 'export': exportData(); break;
     case 'import': importFile.click(); break;
+    case 'install': promptInstall(); break;
+    case 'copy-data': copyData(); break;
+    case 'paste-data': pasteData(); break;
+    case 'paste-go': pasteFromBox(); break;
+    case 'paste-cancel': hidePaste(); try { $('#paste-btn').focus({ preventScroll: true }); } catch (err) {} break;
+    case 'hint-dismiss': dismissHint(); break;
     case 'wipe':
       if (!wipeTimer) {
         t.classList.add('is-armed');
@@ -3332,6 +3608,9 @@ async function boot() {
   $('#sort').value = state.sort;
   render(true);
   revealActiveChips();
+  syncInstallUI();
+  if (isStandalone()) askPersist();
+  registerServiceWorker();
 
   const saved = readJSON(ssGet('recetario:scroll'), null);
   if (saved && saved.hash === listHash() && saved.y > 0) requestAnimationFrame(() => window.scrollTo(0, saved.y));
@@ -3399,8 +3678,40 @@ def _parse_iso(value):
     return dt
 
 
-def build_html(recipes_json_str, warnings=None):
-    """Devuelve el HTML completo. Si se pasa una lista en `warnings`, añade ahí los avisos."""
+# Misma forma que IMG_RE en la web: solo estas rutas se muestran (y llevan huella).
+_IMG_PATH_RE = re.compile(r'images/[\w.\-]+', re.ASCII)
+
+
+def image_versions(recipes, base_dir):
+    """Huella corta (8 hex de SHA-1) del contenido de cada foto que existe en disco.
+
+    La web la añade a la URL (images/x.jpg?v=…): si se cambia una foto, cambia la URL y
+    ni el navegador ni el service worker siguen usando la vieja. Sin base_dir, no hay huellas.
+    """
+    out = {}
+    if base_dir is None:
+        return out
+    base = Path(base_dir)
+    for r in recipes:
+        img = r.get('image') if isinstance(r, dict) else None
+        if not isinstance(img, str) or img in out or not _IMG_PATH_RE.fullmatch(img):
+            continue
+        h = hashlib.sha1()
+        try:
+            with open(str(base / img), 'rb') as f:
+                for chunk in iter(lambda: f.read(1 << 16), b''):
+                    h.update(chunk)
+        except OSError:
+            continue  # no existe (check_data ya avisa): la web la pide sin «?v=»
+        out[img] = h.hexdigest()[:8]
+    return out
+
+
+def build_html(recipes_json_str, warnings=None, base_dir=None):
+    """Devuelve el HTML completo. Si se pasa una lista en `warnings`, añade ahí los avisos.
+
+    base_dir: carpeta desde la que se resuelven las rutas images/… (para las huellas de las fotos).
+    """
     def warn(msg):
         if warnings is not None:
             warnings.append(msg)
@@ -3418,7 +3729,8 @@ def build_html(recipes_json_str, warnings=None):
     dates = [d for d in (_parse_iso(r.get('created_at')) for r in recipes if isinstance(r, dict)) if d]
     latest_iso = max(dates).astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ') if dates else ''
     config = {'tagLabel': TAG_LABEL, 'tagIcon': TAG_ICON, 'tagHue': TAG_HUE,
-              'chipOrder': CHIP_ORDER, 'hiddenTags': HIDDEN_TAGS}
+              'chipOrder': CHIP_ORDER, 'hiddenTags': HIDDEN_TAGS,
+              'imgVersion': image_versions(recipes, base_dir)}
     recipes_json = safe_json(recipes)
 
     html = TEMPLATE
@@ -3623,7 +3935,7 @@ def main():
 
     # Si build_html falla, no se ha tocado index.html y el código de salida es ≠ 0.
     warnings = []
-    html = build_html(recipes_json_str, warnings)
+    html = build_html(recipes_json_str, warnings, base_dir=recipes_path.parent)
     _write_atomic(output_path, html)
 
     recipes = json.loads(recipes_json_str)
