@@ -413,6 +413,16 @@ input:focus-visible+.box{outline:3px solid var(--focus);outline-offset:2px;box-s
 .ingr-row .q{font-weight:700;font-variant-numeric:tabular-nums;overflow-wrap:break-word;min-width:0}
 .ingr-row .n{overflow-wrap:break-word}
 .note{color:var(--ink-3)}
+/* Multiplicar cantidades */
+.scale-wrap{margin:4px 0 8px}
+.scale{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--surface)}
+.scale label{position:relative;display:flex;align-items:center;justify-content:center;min-height:44px;border-radius:999px;font-size:.875rem;font-weight:700;color:var(--ink-2);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background-color .2s,color .2s}
+.scale input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.scale label:has(input:checked){background:var(--accent);color:var(--on-accent)}
+.scale label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.ingr-row .q.is-scaled{color:var(--accent)}
+.scale-note{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--accent-soft);font-size:.9375rem;line-height:1.45}
+.orig-q{text-decoration:underline dotted;text-decoration-color:var(--ink-3);text-decoration-thickness:2px;text-underline-offset:4px}
 input:checked~.q,input:checked~.n{text-decoration:line-through;color:var(--ink-2)}
 /* La casilla oculta ocupa toda la fila: al tabular, el navegador desplaza hasta la fila entera. */
 .ingr-row>input.visually-hidden,.step>input.visually-hidden{inset:0;width:auto;height:auto}
@@ -713,7 +723,17 @@ kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--l
       <p class="d-split" id="d-split" hidden></p>
       <section class="d-ingr" id="d-ingr" aria-labelledby="h-ingr">
         <div class="sec-head"><h3 id="h-ingr" tabindex="-1">Ingredientes</h3><span class="prog" id="d-ingr-prog"></span><button type="button" class="linkbtn" id="d-uncheck" data-action="uncheck-all" hidden>Desmarcar todo</button></div>
+        <fieldset class="seg-wrap scale-wrap">
+          <legend class="visually-hidden">Cantidades de la receta</legend>
+          <div class="scale">
+            <label><input type="radio" name="scale" value="0.5">Mitad</label>
+            <label><input type="radio" name="scale" value="1" checked>Normal</label>
+            <label><input type="radio" name="scale" value="2">Doble</label>
+            <label><input type="radio" name="scale" value="3">Triple</label>
+          </div>
+        </fieldset>
         <ul class="ingr" id="d-ingr-list"></ul>
+        <p class="scale-note" id="d-scale-note" hidden></p>
         <button type="button" class="switch-row wake-row" id="d-wake" role="switch" aria-checked="false" data-action="wake" hidden><span>Mantener la pantalla encendida</span><span class="switch" aria-hidden="true"></span></button>
       </section>
       <section class="d-steps" aria-labelledby="h-steps">
@@ -736,7 +756,7 @@ kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--l
       </footer>
     </div>
   </div>
-  <p class="visually-hidden live" role="status"></p>
+  <p class="visually-hidden live" id="d-live" role="status"></p>
 </dialog>
 
 <dialog id="cook" class="cook" aria-label="Modo cocina">
@@ -798,7 +818,7 @@ kbd.k{display:inline-block;min-width:22px;padding:0 6px;border:1px solid var(--l
       <h3 id="s-keys">Atajos</h3>
       <p><kbd class="k">/</kbd> buscar · <kbd class="k">←</kbd> <kbd class="k">→</kbd> en el modo cocina · <kbd class="k">Ctrl</kbd>+<kbd class="k">Z</kbd> deshacer el último aviso</p>
     </section>
-    <p class="s-build" id="s-build" data-version="ff054597"></p>
+    <p class="s-build" id="s-build" data-version="0a6ea7b5"></p>
   </div>
   <p class="visually-hidden live" role="status"></p>
 </dialog>
@@ -1109,7 +1129,7 @@ function fmtNum(s) {
   if (Number.isInteger(v)) return String(v);
   return String(Math.round(v * 100) / 100).replace('.', ',');
 }
-function formatQty(quantity, unit) {
+function formatQty(quantity, unit, preformatted) {
   const qs = String(quantity == null ? '' : quantity).trim();
   let u = String(unit == null ? '' : unit).trim();
   let extra = '';
@@ -1118,8 +1138,8 @@ function formatQty(quantity, unit) {
   if (par) { u = par[1].trim(); extra = par[2].trim(); }
   const join = (a, b) => [a, b].filter(Boolean).join(' · ');
   const omit = OMIT_UNITS.has(u.toLowerCase());
-  if (NUM_RE.test(qs) || FRAC_RE.test(qs) || RANGE_RE.test(qs)) {
-    const num = fmtNum(qs);
+  if (preformatted || NUM_RE.test(qs) || FRAC_RE.test(qs) || RANGE_RE.test(qs)) {
+    const num = preformatted ? qs : fmtNum(qs);
     if (!u || omit) return { q: num, note: extra };
     if (NOTE_RE.test(u)) return { q: num, note: join(u, extra) };
     return { q: num + ' ' + u, note: extra };
@@ -1128,6 +1148,417 @@ function formatQty(quantity, unit) {
   if (NOTE_RE.test(qs) || qs.length > 12) return { q: '', note: join(omit ? qs : [qs, u].filter(Boolean).join(' '), extra) };
   return { q: omit || !u ? qs : qs + ' ' + u, note: extra };
 }
+
+/* =========================================================
+   Multiplicar cantidades (½, ×2, ×3): números, fracciones, rangos y palabras («media»),
+   redondeo de cocina y singular/plural. Lo que no es un número («al gusto», «un chorrito») no cambia.
+   ========================================================= */
+const Escalar = (function () {
+  /* ------------------------------------------------------------------ utilidades de texto */
+  const deaccent = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const low = s => deaccent(String(s || '').toLowerCase().trim());
+
+  /* ------------------------------------------------------------------ números */
+  const GLYPH_VALUE = {
+    '¼': 1 / 4, '½': 1 / 2, '¾': 3 / 4, '⅓': 1 / 3, '⅔': 2 / 3, '⅛': 1 / 8, '⅜': 3 / 8,
+    '⅝': 5 / 8, '⅞': 7 / 8, '⅕': 1 / 5, '⅖': 2 / 5, '⅗': 3 / 5, '⅘': 4 / 5, '⅙': 1 / 6, '⅚': 5 / 6
+  };
+  const GLYPHS = Object.keys(GLYPH_VALUE).join('');
+  // Fracciones que se muestran con glifo (las de cocina)
+  const NICE = [[1 / 4, '¼'], [1 / 3, '⅓'], [1 / 2, '½'], [2 / 3, '⅔'], [3 / 4, '¾']];
+
+  const WORDS = {
+    un: 1, uno: 1, una: 1, dos: 2, tres: 3, cuatro: 4, cinco: 5, seis: 6, siete: 7, ocho: 8,
+    nueve: 9, diez: 10, once: 11, doce: 12, quince: 15, veinte: 20, medio: 0.5, media: 0.5
+  };
+  // Frases numéricas (se prueban antes que las palabras sueltas; orden: más largas primero)
+  const PHRASES = [
+    [/^(?:una\s+)?docena\s+y\s+media\b/, 18],
+    [/^media\s+docena\b/, 6],
+    [/^(?:una\s+)?docena\b/, 12],
+    [/^(?:un|uno|una)\s+y\s+(?:medio|media)\b/, 1.5],
+    [/^(dos|tres|cuatro|cinco)\s+y\s+(?:medio|media)\b/, m => WORDS[m[1]] + 0.5],
+    [/^tres\s+cuartos?\b/, 0.75],
+    [/^(?:un|1)\s+cuarto\b/, 0.25],
+    [/^dos\s+tercios?\b/, 2 / 3],
+    [/^(?:un|1)\s+tercio\b/, 1 / 3],
+    [/^(?:un\s+)?par\b/, 2]
+  ];
+
+  const NUM_SRC = '(?:\\d+\\s+\\d+\\/\\d+|\\d+\\s*[' + GLYPHS + ']|\\d+\\/\\d+|\\d{1,3}(?:\\.\\d{3})+(?![\\d,])|\\d+(?:[.,]\\d+)?|[' + GLYPHS + '])';
+  const NUM_RE = new RegExp('^' + NUM_SRC);
+  const RANGE_RE = new RegExp('^(' + NUM_SRC + ')\\s*(?:-|–|—|a|o|ó)\\s*(' + NUM_SRC + ')(?![\\d/])');
+
+  function numValue(tok) {
+    tok = tok.trim();
+    let m;
+    if ((m = tok.match(/^(\d+)\s+(\d+)\/(\d+)$/))) return +m[3] ? +m[1] + m[2] / m[3] : NaN;
+    if ((m = tok.match(new RegExp('^(\\d+)\\s*([' + GLYPHS + '])$')))) return +m[1] + GLYPH_VALUE[m[2]];
+    if ((m = tok.match(/^(\d+)\/(\d+)$/))) return +m[2] ? m[1] / m[2] : NaN;
+    if (/^\d{1,3}(?:\.\d{3})+$/.test(tok)) return +tok.replace(/\./g, ''); // «1.000» = mil
+    if (GLYPH_VALUE[tok] != null) return GLYPH_VALUE[tok];
+    return parseFloat(tok.replace(',', '.'));
+  }
+
+  /* Analiza la cadena de cantidad.
+   * -> { kind:'empty'|'number'|'range'|'text', value?, min?, max?, prefix, rest, source }
+   *    rest = texto que sigue al número («200g» -> rest «g»; «un chorrito» -> rest «chorrito») */
+  const PREFIX_RE = /^(~|≈|aprox\.?|aproximadamente|unos|unas|c\.)\s*/i;
+  function parseQuantity(q) {
+    const source = String(q == null ? '' : q).trim();
+    if (!source) return { kind: 'empty', source };
+    let s = source, prefix = '';
+    const pm = s.match(PREFIX_RE);
+    if (pm && pm[0].length < s.length) { prefix = pm[1]; s = s.slice(pm[0].length); }
+
+    let m = s.match(RANGE_RE);
+    if (m) {
+      const a = numValue(m[1]), b = numValue(m[2]);
+      if (isFinite(a) && isFinite(b) && b > a) return { kind: 'range', min: a, max: b, prefix, rest: s.slice(m[0].length).trim(), source };
+    }
+    m = s.match(NUM_RE);
+    if (m) {
+      const v = numValue(m[0]);
+      if (isFinite(v) && v > 0) return { kind: 'number', value: v, prefix, rest: s.slice(m[0].length).trim(), source };
+    }
+    const ls = low(s);
+    for (const [re, val] of PHRASES) {
+      const pm2 = ls.match(re);
+      if (pm2) return { kind: 'number', value: typeof val === 'function' ? val(pm2) : val, prefix, rest: s.slice(pm2[0].length).trim(), source };
+    }
+    m = ls.match(/^([a-z]+)\b/);
+    if (m && WORDS[m[1]] != null) return { kind: 'number', value: WORDS[m[1]], prefix, rest: s.slice(m[0].length).trim(), source, word: true };
+    return { kind: 'text', prefix, rest: s, source };
+  }
+
+  /* ------------------------------------------------------------------ singular / plural */
+  // Palabras que no cambian (extranjerismos, tallas, marcas, abreviaturas)
+  const INVARIABLE = new Set(('g gr grs kg ml cl dl l cc mg oz lb cda cdas cdta cdtas cdita m s xl xxl ' +
+    'light fit cherry plum baby shiitake pak choi udon ramen sushi nori furikake gochugaru cottage cheddar ' +
+    'guanciale philadelphia mirin miso tahini pesto curry spray w260 big mac dijon lunes crisis dosis virus ' +
+    'tofu kale wok sriracha panko tempura').split(' '));
+  const IRREG_PL = {
+    joven: 'jóvenes', origen: 'orígenes', imagen: 'imágenes', volumen: 'volúmenes', germen: 'gérmenes',
+    margen: 'márgenes', resumen: 'resúmenes', examen: 'exámenes', 'carácter': 'caracteres'
+  };
+  const IRREG_SG = Object.fromEntries(Object.entries(IRREG_PL).map(([a, b]) => [b, a]));
+  Object.assign(IRREG_SG, { dulces: 'dulce', chiles: 'chile', cruces: 'cruce', males: 'mal' });
+  const STOP = new Set('de del con y o u e para sin a al en por la el los las tipo estilo'.split(' '));
+
+  const keepCase = (orig, out) => (orig[0] && orig[0] !== orig[0].toLowerCase()) ? out[0].toUpperCase() + out.slice(1) : out;
+  const vowelGroups = w => (w.match(/[aeiouáéíóúü]+/gi) || []);
+  function stripAccentLast(w) { // quita la tilde si está en la última sílaba
+    const g = vowelGroups(w); if (!g.length) return w;
+    const last = g[g.length - 1];
+    if (!/[áéíóú]/i.test(last)) return w;
+    const i = w.toLowerCase().lastIndexOf(last.toLowerCase());
+    return w.slice(0, i) + deaccent(w.slice(i, i + last.length)) + w.slice(i + last.length);
+  }
+  function addAccentLast(w) { // limon -> limón (aguda terminada en n/s)
+    if (/[áéíóú]/i.test(w)) return w;
+    const g = vowelGroups(w); if (g.length < 2) return w;
+    const last = g[g.length - 1];
+    const i = w.toLowerCase().lastIndexOf(last.toLowerCase());
+    // en diptongos («ue», «io») la tilde va en la vocal abierta / la última
+    let k = last.length - 1;
+    if (last.length > 1 && /[aeo]/i.test(last)) k = last.search(/[aeo]/i);
+    const pos = i + k, map = { a: 'á', e: 'é', i: 'í', o: 'ó', u: 'ú' };
+    const ch = w[pos], acc = map[ch.toLowerCase()];
+    if (!acc) return w;
+    return w.slice(0, pos) + (ch === ch.toUpperCase() ? acc.toUpperCase() : acc) + w.slice(pos + 1);
+  }
+
+  function pluralizeWord(w) {
+    if (!w || /[\d~(]/.test(w) || /^[A-Z]{1,3}$/.test(w)) return w;
+    const lw = w.toLowerCase();
+    if (INVARIABLE.has(deaccent(lw)) || STOP.has(lw)) return w;
+    if (IRREG_PL[lw]) return keepCase(w, IRREG_PL[lw]);
+    const last = lw.slice(-1);
+    if ('aeiou'.includes(last) || 'áéó'.includes(last)) return w + 's';
+    if ('íú'.includes(last)) return w + 'es';
+    if (last === 'z') return w.slice(0, -1) + 'ces';
+    if (last === 's' || last === 'x') {
+      if (/[áéíóú]/.test(vowelGroups(lw).slice(-1)[0] || '')) return stripAccentLast(w) + 'es'; // anís -> anises
+      if (vowelGroups(lw).length === 1) return w + 'es';                                     // mes -> meses
+      return w;                                                                              // ñoquis, lunes
+    }
+    if ('lnrdj'.includes(last)) return stripAccentLast(w) + 'es';  // limón -> limones, papel -> papeles
+    if (last === 'y') return w.length <= 4 ? w + 'es' : w + 's';  // rey -> reyes, spray -> sprays
+    return w + 's';                                               // extranjerismos: chip -> chips
+  }
+
+  function singularizeWord(w) {
+    if (!w || /[\d~(]/.test(w) || /^[A-Z]{1,3}$/.test(w)) return w;
+    const lw = w.toLowerCase();
+    if (INVARIABLE.has(deaccent(lw)) || STOP.has(lw)) return w;
+    if (IRREG_SG[lw]) return keepCase(w, IRREG_SG[lw]);
+    if (!lw.endsWith('s')) return w;
+    if (/[áéó]s$/.test(lw)) return w.slice(0, -1);                           // cafés -> café
+    if (lw.endsWith('ces')) return w.slice(0, -3) + 'z';                     // nueces -> nuez
+    if (lw.endsWith('es')) {
+      const stem = w.slice(0, -2), ls = stem.toLowerCase();
+      // termina en vocal + l/n/r/d/j/y -> final válido en español: papeles, unidades, limones
+      if (/[aeiouáéíóú][lnrdjy]$/.test(ls)) {
+        if (/[n]$/.test(ls) && vowelGroups(ls).length >= 2) return addAccentLast(stem); // limones -> limón
+        return stem;
+      }
+      return w.slice(0, -1);                                                   // tomates -> tomate, grandes -> grande
+    }
+    if (/[^aeiouáéíóú]s$/.test(lw)) return w;                                  // no parece plural
+    if (lw.endsWith('is') || lw.endsWith('us')) return w;                       // ñoquis, virus
+    return w.slice(0, -1);                                                     // huevos -> huevo
+  }
+
+  const looksPlural = w => /s$/i.test(w) && !INVARIABLE.has(deaccent(w.toLowerCase())) && singularizeWord(w) !== w;
+
+  // Cambia el número de las palabras de una unidad: «cucharada» -> «cucharadas», «unidad grande» -> «unidades grandes»
+  function unitNumber(base, plural) {
+    if (!base) return base;
+    return base.split(/(\s+)/).map(tok => {
+      if (/^\s+$/.test(tok)) return tok;
+      return plural ? (looksPlural(tok) ? tok : pluralizeWord(tok)) : singularizeWord(tok);
+    }).join('');
+  }
+
+  /* Ajusta el sintagma inicial del nombre (sustantivo + adjetivos hasta «de», «con», «(», «,», ...).
+   * «cebolla morada» x2 -> «cebollas moradas»; «huevos» x0,5 (=1) -> «huevo» */
+  function adjustName(name, count) {
+    const s = String(name || '');
+    const plural = count > 1;
+    const parts = s.split(/(\s+)/);
+    let started = false;
+    for (let i = 0; i < parts.length; i++) {
+      const tok = parts[i];
+      if (/^\s+$/.test(tok)) continue;
+      const bare = tok.replace(/[,.;:]+$/, '');
+      if (STOP.has(bare.toLowerCase()) || /^[(\d]/.test(bare)) break;
+      if (!/^[a-záéíóúüñ]+$/i.test(bare)) break;
+      const out = plural ? (looksPlural(bare) ? bare : pluralizeWord(bare)) : (looksPlural(bare) ? singularizeWord(bare) : bare);
+      parts[i] = out + tok.slice(bare.length);
+      started = true;
+      if (bare !== tok) break; // había una coma pegada: fin del sintagma
+    }
+    return started ? parts.join('') : s;
+  }
+
+  /* ------------------------------------------------------------------ clases de unidad */
+  const U = {
+    mass: /^(g|gr|grs|gramos?|mg)$/, kilo: /^(kg|kilos?|kilogramos?)$/,
+    vol: /^(ml|mililitros?|cl|dl|cc)$/, litro: /^(l|litros?)$/,
+    spoon: /^(cucharadas?|cucharaditas?|cdas?|cdtas?|cditas?|cucharas?|cucharones?)$/,
+    cup: /^(tazas?|tacitas?|vasos?|vasitos?)$/,
+    whole: /^(dientes?|laminas?|lonchas?|rodajas?|gotas?|hojas?|rebanadas?|filetes?|huevos?|yemas?|claras?|obleas?|tortillas?|cayenas?|piezas?)$/,
+    count: /^(unidad|unidades|latas?|paquetes?|sobres?|tarrinas?|barras?|trozos?|ramas?|ramitas?|manojos?|punados?|porcion|porciones|racion|raciones|bolsas?|botes?|tarros?|cabezas?|bolas?|naranjas?|limones?|limon)$/,
+    vague: /^(pizcas?|chorritos?|chorros?|toques?|pellizcos?|poco|poquito|hojitas?|chispas?|golpes?)$/
+  };
+  const NOTE_UNIT = /^(al gusto|opcional|segun .*|para .+|a ojo|rallad[oa]s?|picad[oa]s?)$/;
+  // Nombres que se cuentan en enteros (no tiene sentido «1½ huevos»)
+  const WHOLE_NAME = /\b(huevos?|yemas?|claras?|langostinos?|gambones?|papel(es)? de arroz|laminas?|obleas?|tortillas?|hamburguesas?|cayenas?|contramuslos?|dientes?|lonchas?|gyozas?|obleas?)\b/;
+
+  function splitUnit(unit) {
+    const u = String(unit == null ? '' : unit).trim();
+    const m = u.match(/^(.*?)\s*(\([^()]*\))?\s*$/);
+    return { base: (m ? m[1] : u).trim(), paren: m && m[2] ? m[2] : '' };
+  }
+
+  function unitClass(base, name) {
+    const b = low(base);
+    if (/\bpor (persona|comensal|racion|cabeza)\b/.test(b)) return 'perPerson';
+    const first = b.split(/\s+/)[0] || '';
+    let cls = 'count';
+    if (!b) cls = 'count';
+    else if (NOTE_UNIT.test(b)) cls = 'note';
+    else if (U.mass.test(first)) cls = 'mass';
+    else if (U.kilo.test(first)) cls = 'kilo';
+    else if (U.vol.test(first)) cls = 'vol';
+    else if (U.litro.test(first)) cls = 'litro';
+    else if (U.spoon.test(first)) cls = 'spoon';
+    else if (U.cup.test(first)) cls = 'cup';
+    else if (U.whole.test(first)) cls = 'whole';
+    else if (U.vague.test(first) || /^un (chorrito|poco|toque)/.test(b)) cls = 'vague';
+    else if (U.count.test(first)) cls = 'count';
+    // «3 huevos», «2 unidades huevo»: se cuentan en enteros. Pero «1 paquete láminas…» sigue siendo un envase.
+    if ((!b || /^unidad(es)?\b/.test(b) || cls === 'note') && WHOLE_NAME.test(low(name))) cls = 'whole';
+    return cls;
+  }
+
+  /* ------------------------------------------------------------------ redondeo «de cocina» */
+  function nearestFraction(v, fracs) { // fracs: lista de fracciones permitidas en [0,1)
+    const whole = Math.floor(v), f = v - whole;
+    let best = 0, bd = Infinity;
+    for (const c of fracs.concat([1])) { const d = Math.abs(f - c); if (d < bd - 1e-9) { bd = d; best = c; } }
+    return whole + best;
+  }
+  const Q = [0, 1 / 4, 1 / 2, 3 / 4], QT = [0, 1 / 4, 1 / 3, 1 / 2, 2 / 3, 3 / 4], H = [0, 1 / 2];
+
+  // Devuelve { v, unit } ya redondeado; unit puede cambiar (g -> kg) solo en masa/volumen
+  function kitchenRound(v, cls, step) {
+    switch (cls) {
+      case 'mass': case 'vol': {
+        if (step == null) step = rangeStep(v, cls);
+        return Math.max(step, Math.round(v / step) * step);
+      }
+      case 'kilo': case 'litro':
+        return v < 3 ? Math.max(1 / 4, nearestFraction(v, Q)) : nearestFraction(v, H);
+      case 'spoon':
+        return v < 4 ? Math.max(1 / 4, nearestFraction(v, Q)) : v < 10 ? nearestFraction(v, H) : Math.round(v);
+      case 'cup':
+        return v < 3 ? Math.max(1 / 4, nearestFraction(v, QT)) : v < 10 ? nearestFraction(v, H) : Math.round(v);
+      case 'whole': // enteros; por debajo de 1 se permite «½» (½ huevo batido, ½ diente)
+        return v < 1 ? 0.5 : Math.round(v);
+      default: // count, note
+        return v < 1 ? Math.max(1 / 4, nearestFraction(v, Q)) : v < 5 ? nearestFraction(v, H) : Math.round(v);
+    }
+  }
+  // Paso común para los dos extremos de un rango (se elige por el mayor)
+  function rangeStep(max, cls) {
+    // g / ml: 0,5 por debajo de 10; 1 hasta 30 (levadura, sal); 5 hasta 250; 10 a partir de ahí
+    if (cls === 'mass' || cls === 'vol') return max < 10 ? 0.5 : max < 30 ? 1 : max < 250 ? 5 : 10;
+    return null;
+  }
+
+  /* ------------------------------------------------------------------ formato */
+  function fmtDecimal(v) {
+    const r = Math.round(v * 100) / 100;
+    return Number.isInteger(r) ? String(r) : String(r).replace('.', ',');
+  }
+  function fmtKitchen(v) { // 1.5 -> «1½», 0.25 -> «¼», 2 -> «2»
+    const whole = Math.floor(v + 1e-9), f = v - whole;
+    if (f < 1e-6) return String(whole);
+    for (const [c, g] of NICE) if (Math.abs(f - c) < 0.01) return (whole ? whole : '') + g;
+    return fmtDecimal(v);
+  }
+  function fmtFor(v, cls) { return (cls === 'mass' || cls === 'vol') ? fmtDecimal(v) : fmtKitchen(v); }
+
+  // Escala números de masa/volumen dentro de un paréntesis de la unidad: «(~200g)» -> «(~400 g)»
+  function scaleParen(paren, factor) {
+    return paren.replace(/(~|≈)?\s*(\d+(?:[.,]\d+)?)\s*(g|gr|ml)\b/gi, (all, pre, n, u) => {
+      const cls = /ml/i.test(u) ? 'vol' : 'mass';
+      return (pre || '') + fmtDecimal(kitchenRound(parseFloat(n.replace(',', '.')) * factor, cls)) + ' ' + u.toLowerCase();
+    });
+  }
+
+  /* ------------------------------------------------------------------ API */
+  function untouched(q, unit, reason, parsed, cls) {
+    return { text: String(q == null ? '' : q).trim(), unitText: String(unit == null ? '' : unit).trim(),
+      scaled: false, approx: false, reason, kind: parsed.kind, unitClass: cls };
+  }
+
+  function scaleQuantity(quantity, unit, factor, opts) {
+    opts = opts || {};
+    const parsed = parseQuantity(quantity);
+    let { base, paren } = splitUnit(unit);
+    // Texto que sigue al número dentro de la cantidad («200g», «2 cucharadas», «un chorrito»)
+    if ((parsed.kind === 'number' || parsed.kind === 'range') && parsed.rest) {
+      const r = parsed.rest.replace(/^de\s+/i, '');
+      if (/^\(.*\)$/.test(r)) paren = (r + ' ' + paren).trim();
+      else base = (r + ' ' + base).trim();
+    }
+    const cls = unitClass(base, opts.name);
+    const lq = low(quantity);
+
+    if (parsed.kind === 'empty') return untouched(quantity, unit, 'vacío', parsed, cls);
+    if (parsed.kind === 'text') {
+      if (/^al gusto|^a gusto/.test(lq)) return untouched(quantity, unit, 'al gusto', parsed, cls);
+      if (/^(segun|misma cantidad|igual cantidad|lo mismo|la misma)/.test(lq)) return untouched(quantity, unit, 'referencia', parsed, cls);
+      if (U.vague.test(lq.split(/\s+/)[0]) || /^un (chorrito|poco|toque|chorro|pellizco|punado)/.test(lq) || /^(poco|un poco)$/.test(lq))
+        return untouched(quantity, unit, 'a ojo', parsed, cls);
+      return untouched(quantity, unit, 'texto', parsed, cls);
+    }
+    if (cls === 'vague') return untouched(quantity, unit, 'a ojo', parsed, cls);
+    if (!(factor > 0) || !isFinite(factor)) return untouched(quantity, unit, 'factor no válido', parsed, cls);
+
+    let f = factor;
+    if (cls === 'perPerson') {
+      if (!(opts.personas > 0)) return untouched(quantity, unit, 'por persona', parsed, cls);
+      f = opts.personas; // modo «personas»: 100 g por persona x 4 personas = 400 g
+      base = base.replace(/\s*por (persona|comensal|ración|racion|cabeza)\b/i, '').trim();
+    }
+    const effCls = cls === 'perPerson' ? unitClass(base, opts.name) : cls;
+
+    // Masa y volumen se redondean siempre en g / ml; al final se pasa a kg / litro si queda redondo
+    const fromBig = effCls === 'kilo' || effCls === 'litro';
+    const roundCls = effCls === 'kilo' ? 'mass' : effCls === 'litro' ? 'vol' : effCls;
+    const k = fromBig ? 1000 : 1;
+    const exHi = (parsed.kind === 'range' ? parsed.max : parsed.value) * f * k;
+    const exLo = parsed.kind === 'range' ? parsed.min * f * k : null;
+    const st = rangeStep(exHi, roundCls);
+    let hi = kitchenRound(exHi, roundCls, st);
+    let lo = exLo == null ? null : kitchenRound(exLo, roundCls, st);
+    let outCls = roundCls;
+    if (roundCls === 'mass' || roundCls === 'vol') {
+      // de kg/litro: se mantiene si es múltiplo de 250 (¼ kg, ½ litro); de g/ml: solo desde 1000 (2 kg)
+      const minBig = fromBig ? 250 : 1000;
+      const big = x => x >= minBig && Math.abs(x / 250 - Math.round(x / 250)) < 1e-9;
+      if (big(hi) && (lo == null || big(lo))) {
+        outCls = roundCls === 'mass' ? 'kilo' : 'litro';
+        hi /= 1000; if (lo != null) lo /= 1000;
+        if (!fromBig) base = base.replace(/^\S+/, roundCls === 'mass' ? 'kg' : 'litro');
+      } else if (fromBig) base = base.replace(/^\S+/, roundCls === 'mass' ? 'g' : 'ml');
+    }
+    const shownBase = (outCls === 'kilo' || outCls === 'litro') ? hi * 1000 : hi;
+    // Un rango ya es aproximado: no se marca con «≈»
+    const approx = parsed.kind !== 'range' && relErr(exHi, shownBase) > 0.10;
+    const exactHi = exHi / k;
+
+    let text;
+    if (lo != null && Math.abs(lo - hi) > 1e-9) text = fmtFor(lo, outCls) + '–' + fmtFor(hi, outCls);
+    else text = fmtFor(hi, outCls);
+    if (approx) text = '≈' + text;
+    if (parsed.prefix && !approx) text = parsed.prefix + ' ' + text;
+
+    const isPlural = hi > 1;
+    let unitText = base;
+    if (base && outCls !== 'mass' && outCls !== 'vol' && cls !== 'note' && !/^(kg|l)$/i.test(base))
+      unitText = unitNumber(base, isPlural);
+    if (paren) unitText = (unitText + ' ' + scaleParen(paren, f)).trim();
+
+    return { text, unitText, scaled: true, approx, reason: null, kind: parsed.kind, unitClass: cls, value: hi, exact: exactHi };
+  }
+  function relErr(exact, shown) { return exact > 0 ? Math.abs(shown - exact) / exact : 0; }
+
+  // ¿La unidad se oculta al mostrarla? (formatQty() omite «unidad/unidades»): entonces el número va pegado al nombre
+  function unitHidden(unit) {
+    const b = low(splitUnit(unit).base);
+    return !b || /^unidad(es)?( grandes?| pequen[ao]s?| median[ao]s?)?$/.test(b);
+  }
+
+  function scaleIngredient(ing, factor, opts) {
+    opts = Object.assign({}, opts, { name: ing.name });
+    const r = scaleQuantity(ing.quantity, ing.unit, factor, opts);
+    let name = String(ing.name || '').trim();
+    if (r.scaled && (r.unitClass === 'count' || r.unitClass === 'whole' || r.unitClass === 'perPerson') && unitHidden(r.unitText))
+      name = adjustName(name, r.value);
+    return { name, quantity: r.text, unit: r.unitText, scaled: r.scaled, approx: r.approx, reason: r.reason, unitClass: r.unitClass };
+  }
+
+  /* ------------------------------------------------------------------ cantidades dentro de los pasos */
+  const STEP_NUM = '(?:\\d+(?:[.,]\\d+)?(?:\\s*[-–]\\s*\\d+(?:[.,]\\d+)?)?|\\d+\\/\\d+|[' + GLYPHS + ']|un|una|dos|tres|cuatro|cinco|seis|medio|media)';
+  // \b de JS no entiende tildes («una lámina» daría «una l»): se usan límites Unicode.
+  // Sin lookbehind «(?<!…)»: iOS 15 (iPhone 6s/7/SE 1.ª gen.) no lo soporta y rompería todo el script.
+  const B0 = '(^|[^\\p{L}\\d])', B1 = '(?![\\p{L}\\d])';
+  const STEP_RES = [
+    ['temperatura', new RegExp(B0 + STEP_NUM + '\\s*(?:º|°|grados)\\s*C?', 'giu')],
+    ['tiempo', new RegExp(B0 + STEP_NUM + '\\s*(?:min(?:utos?)?|h|horas?|segundos?|seg|días?|noches?)' + B1, 'giu')],
+    ['medida', new RegExp(B0 + STEP_NUM + '\\s*(?:cm|mm)' + B1, 'giu')],
+    ['cantidad', new RegExp(B0 + STEP_NUM + '\\s*(?:de\\s+)?(?:g|gr|gramos|kg|ml|l|litros?|cucharadas?|cucharaditas?|tazas?|vasos?|dientes?|huevos?|yemas?|claras?|latas?|tarrinas?|lonchas?|láminas?|unidades?)' + B1, 'giu')]
+  ];
+  function cantidadesEnPaso(texto) {
+    const out = [];
+    for (const [kind, re] of STEP_RES) {
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(texto))) {
+        const text = m[0].slice(m[1].length).trim(), index = m.index + m[1].length;
+        if (out.some(o => index < o.index + o.text.length && o.index < index + text.length)) continue;
+        out.push({ text, index, kind });
+      }
+    }
+    return out.sort((a, b) => a.index - b.index);
+  }
+
+  return { scaleIngredient, cantidadesEnPaso };
+})();
 
 /* =========================================================
    Búsqueda, filtros y orden
@@ -1772,10 +2203,39 @@ function setChecks(id, c) {
   else ssSet(checksKey(id), JSON.stringify(c));
 }
 
-function buildIngrList(ul, d, checks) {
+// Factor de cantidades por receta: dura la visita (como las casillas), no se queda puesto para la semana que viene.
+const QTY_LABEL = { 0.5: 'Mitad', 1: 'Normal', 2: 'Doble', 3: 'Triple' };
+const QTY_FOR = { 0.5: 'la mitad', 2: 'el doble', 3: 'el triple' };
+const scaleKey = id => 'recetario:scale:' + id;
+function getScale(id) { const v = Number(ssGet(scaleKey(id))); return own(QTY_LABEL, v) ? v : 1; }
+function setScale(id, v) { if (v === 1) ssDel(scaleKey(id)); else ssSet(scaleKey(id), String(v)); }
+// Texto de un ingrediente con el factor aplicado. A ×1 se muestra tal cual viene en la receta.
+function ingRow(ing, factor) {
+  if (factor === 1) return Object.assign(formatQty(ing.quantity, ing.unit), { name: String(ing.name || '').trim(), scaled: false });
+  const s = Escalar.scaleIngredient(ing, factor);
+  return Object.assign(formatQty(s.quantity, s.unit, s.scaled), { name: s.name, scaled: s.scaled });
+}
+// Pasos: con el factor puesto, las cantidades del texto (que son las originales) van subrayadas.
+function fillStepText(node, text, factor) {
+  node.textContent = '';
+  const found = factor === 1 ? [] : Escalar.cantidadesEnPaso(text).filter(m => m.kind === 'cantidad');
+  let pos = 0;
+  found.forEach(m => {
+    if (m.index > pos) node.appendChild(document.createTextNode(text.slice(pos, m.index)));
+    const sp = el('span', 'orig-q', m.text);
+    sp.title = 'Cantidad de la receta original';
+    node.appendChild(sp);
+    pos = m.index + m.text.length;
+  });
+  if (pos < text.length) node.appendChild(document.createTextNode(text.slice(pos)));
+  return found.length;
+}
+
+function buildIngrList(ul, d, checks, factor) {
   ul.textContent = '';
+  factor = factor || 1;
   d.ingredients.forEach((ing, i) => {
-    const f = formatQty(ing.quantity, ing.unit);
+    const f = ingRow(ing, factor);
     const li = el('li');
     const lab = el('label', 'ingr-row');
     const cb = el('input', 'visually-hidden');
@@ -1786,15 +2246,16 @@ function buildIngrList(ul, d, checks) {
     const box = el('span', 'box');
     box.setAttribute('aria-hidden', 'true');
     box.appendChild(icon('check'));
-    const n = el('span', 'n', String(ing.name || '').trim());
+    const n = el('span', 'n', f.name);
     if (f.note) n.appendChild(el('span', 'note', ' · ' + f.note));
-    lab.append(cb, box, el('span', 'q', f.q), n);
+    lab.append(cb, box, el('span', 'q' + (f.scaled ? ' is-scaled' : ''), f.q), n);
     li.appendChild(lab);
     ul.appendChild(li);
   });
 }
-function buildSteps(ol, d, checks) {
+function buildSteps(ol, d, checks, factor) {
   ol.textContent = '';
+  let marked = 0;
   d.steps.forEach((s, i) => {
     const li = el('li');
     const lab = el('label', 'step');
@@ -1805,10 +2266,33 @@ function buildSteps(ol, d, checks) {
     cb.checked = checks.s.includes(i);
     const num = el('span', 'num', pad2(i + 1));
     num.setAttribute('aria-hidden', 'true');
-    lab.append(cb, num, icon('check', 'ok'), el('span', 'txt', s));
+    const txt = el('span', 'txt');
+    marked += fillStepText(txt, s, factor || 1);
+    lab.append(cb, num, icon('check', 'ok'), txt);
     li.appendChild(lab);
     ol.appendChild(li);
   });
+  return marked;
+}
+// Aplica el factor de cantidades de la receta abierta a ingredientes, pasos, selector y aviso.
+function applyQty() {
+  if (!openId) return;
+  const d = BY_ID.get(openId), factor = getScale(openId), checks = getChecks(openId);
+  $$('input[name="scale"]').forEach(r => { r.checked = Number(r.value) === factor; });
+  buildIngrList($('#d-ingr-list'), d, checks, factor);
+  const marked = buildSteps($('#d-steps'), d, checks, factor);
+  syncChecks();
+  const note = $('#d-scale-note');
+  note.hidden = factor === 1;
+  if (factor === 1) { note.textContent = ''; return; }
+  const parts = ['Cantidades para ' + QTY_FOR[factor] + '.'];
+  const fixed = d.ingredients.some(ing => !Escalar.scaleIngredient(ing, factor).scaled);
+  if (fixed) parts.push('Lo que no lleva cantidad (sal, aceite, especias…) ajústalo a ojo.');
+  if (marked) parts.push('En los pasos, las cantidades subrayadas son las de la receta original.');
+  if (d.tags.includes('horno') || d.tags.includes('postre'))
+    parts.push(factor < 1 ? 'Si va en molde, usa uno más pequeño y vigila el horno: suele necesitar menos tiempo.'
+      : 'Si va en molde, usa uno más grande o haz varias tandas, y vigila el horno: puede necesitar más tiempo.');
+  note.textContent = parts.join(' ');
 }
 // Sincroniza casillas, progreso y «paso siguiente» en el detalle y en la hoja de cocina.
 function syncChecks() {
@@ -1824,6 +2308,14 @@ function syncChecks() {
   const next = c.s.length ? d.steps.findIndex((_, i) => !c.s.includes(i)) : -1;
   $$('#d-steps .step').forEach((s, i) => s.classList.toggle('is-next', i === next));
 }
+document.addEventListener('change', e => {
+  const r = e.target;
+  if (!r.matches || !r.matches('input[name="scale"]') || !openId || !r.checked) return;
+  const v = Number(r.value);
+  setScale(openId, v);
+  applyQty();
+  say($('#d-live'), v === 1 ? 'Cantidades de la receta original' : 'Cantidades para ' + QTY_FOR[v]);
+});
 document.addEventListener('change', e => {
   const cb = e.target;
   if (!cb.matches || !cb.matches('input[data-check]') || !openId) return;
@@ -1926,9 +2418,7 @@ function fillDetail(d) {
   const split = $('#d-split');
   split.hidden = parts.length < 2;
   split.textContent = parts.join(' · ');
-  const checks = getChecks(d.id);
-  buildIngrList($('#d-ingr-list'), d, checks);
-  buildSteps($('#d-steps'), d, checks);
+  applyQty();
   $('#d-ingr').hidden = !d.ingredients.length;
   $('.d-steps').hidden = !d.steps.length;
   const src = $('#d-src');
@@ -2151,10 +2641,12 @@ async function shareRecipe(d) {
   toast((await copyText(url)) ? 'Enlace copiado' : 'No se pudo copiar el enlace');
 }
 function recipeText(d) {
-  const lines = [d.displayTitle, [fmtTime(d.total), DIFF[d.diff]].filter(Boolean).join(' · '), '', 'INGREDIENTES'];
+  const factor = getScale(d.id);
+  const lines = [d.displayTitle, [fmtTime(d.total), DIFF[d.diff]].filter(Boolean).join(' · '), '',
+    factor === 1 ? 'INGREDIENTES' : 'INGREDIENTES (cantidades para ' + QTY_FOR[factor] + ')'];
   d.ingredients.forEach(i => {
-    const f = formatQty(i.quantity, i.unit);
-    lines.push('- ' + [f.q, String(i.name || '').trim()].filter(Boolean).join(' ') + (f.note ? ' (' + f.note + ')' : ''));
+    const f = ingRow(i, factor);
+    lines.push('- ' + [f.q, f.name].filter(Boolean).join(' ') + (f.note ? ' (' + f.note + ')' : ''));
   });
   lines.push('', 'PASOS');
   d.steps.forEach((s, k) => lines.push((k + 1) + '. ' + s));
@@ -2222,11 +2714,12 @@ function showStep(i, dir) {
   const d = BY_ID.get(cook.id);
   cook.idx = i;
   ssSet('recetario:cook:' + cook.id, String(i));
-  $('#c-label').textContent = 'Paso ' + (i + 1) + ' de ' + cook.n;
+  const factor = getScale(cook.id);
+  $('#c-label').textContent = 'Paso ' + (i + 1) + ' de ' + cook.n + (factor === 1 ? '' : ' · ' + QTY_LABEL[factor]);
   Array.from(cProg.children).forEach((s, k) => s.classList.toggle('on', k <= i));
   cProg.setAttribute('aria-valuenow', String(i + 1));
   $('#c-num').textContent = pad2(i + 1);
-  $('#c-txt').textContent = d.steps[i];
+  fillStepText($('#c-txt'), d.steps[i], factor);
   // El lector anuncia el paso entero, no solo «Paso N de M».
   say($('#c-live'), 'Paso ' + (i + 1) + ' de ' + cook.n + '. ' + d.steps[i]);
   document.title = 'Paso ' + (i + 1) + ' · ' + d.displayTitle;
@@ -2332,7 +2825,9 @@ cBody.addEventListener('pointerup', e => {
 });
 function openCookIngr() {
   const d = BY_ID.get(cook.id);
-  buildIngrList($('#ci-list'), d, getChecks(cook.id));
+  const factor = getScale(cook.id);
+  buildIngrList($('#ci-list'), d, getChecks(cook.id), factor);
+  $('#ci-title').textContent = factor === 1 ? 'Ingredientes' : 'Ingredientes · ' + QTY_LABEL[factor].toLowerCase();
   try { cookIngr.showModal(); } catch (e) { cookIngr.setAttribute('open', ''); }
 }
 
